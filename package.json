@@ -1,6 +1,6 @@
 {
   "name": "my-project-react",
-  "homepage": "https://skch2710.github.io/react-project/tree/main/my-project-react/",
+  "homepage": "https://skch2710.github.io/my-project-react/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -b gh-pages-new"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
