@@ -56,9 +56,10 @@ export const revisedFields = [
   { field: "reason", headerName: "Reason", width: 150 },
   { field: "vacatedDate", headerName: "Vacated Date", width: 150 },
   { field: "active", headerName: "Active", width: 150 },
-];
+]
 
-export const buildColumns = (onAction) => {
+
+export const buildColumns = (onAction,isWriteAccessForHostel) => {
   const actionColumn = {
     field: "actions",
     type: "actions",
@@ -74,10 +75,10 @@ export const buildColumns = (onAction) => {
         label={VIEW}
         onClick={() => onAction(VIEW, params.row)}
       />,
-      <GridActionsCellItem
+      <GridActionsCellItem disabled={!isWriteAccessForHostel}
         icon={
           <Tooltip title="Edit Details">
-            <Edit fontSize="small" />
+            <Edit fontSize="small"/>
           </Tooltip>
         }
         label={EDIT}

@@ -7,7 +7,7 @@ import Button from "../../components/button/Button";
 import { ADD } from "../../utils/constants";
 
 const HostelSearchForm = (props) => {
-  const { handlePopup, handleSearch } = props;
+  const { handlePopup, handleSearch, isWriteAccessForHostel } = props;
   return (
     <Formik
       initialValues={searchPayload}
@@ -48,6 +48,7 @@ const HostelSearchForm = (props) => {
                   label="Add Hostel"
                   color="success"
                   onClick={() => handlePopup(ADD)}
+                  disabled={!isWriteAccessForHostel}
                 />
                 <Button label="Search" color="primary" onClick={handleSubmit} />
                 <Button

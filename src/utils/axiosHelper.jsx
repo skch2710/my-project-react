@@ -52,10 +52,12 @@ axiosHelper.interceptors.request.use(async (config) => {
 
   // ✅ Read from authSlice
   const { token, refreshToken } = state?.auth || {};
+  const { emailId } = state?.user?.user || {};
 
   // ✅ Token valid → continue request
   if (token && !isTokenExpired(token)) {
     config.headers.Authorization = `Bearer ${token}`;
+    config.headers["RequestVerify"] = emailId;
     return config;
   }
 

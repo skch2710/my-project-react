@@ -9,7 +9,7 @@ import React, {
 import Popup from "../../components/popup/Popup";
 import HostelForm from "./HostelForm";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD, EDIT, VIEW, DELETE } from "../../utils/constants";
+import useAccess, { ADD, EDIT, VIEW, DELETE } from "../../utils/constants";
 import {
   saveOrUpdateHosteller,
   getHostellers,
@@ -38,6 +38,7 @@ const Hostel = () => {
     page: 0,
     pageSize: 25,
   });
+  const isWriteAccessForHostel = useAccess(5, "write");
 
   const dispatch = useDispatch();
   const { form, grid } = useSelector((state) => state.hostel);
@@ -72,7 +73,10 @@ const Hostel = () => {
     }
   }, []);
 
-  const columns = useMemo(() => buildColumns(handleAction), [handleAction]);
+  const columns = useMemo(
+    () => buildColumns(handleAction, isWriteAccessForHostel),
+    [handleAction, isWriteAccessForHostel]
+  );
 
   const handleSubmit = async (values) => {
     console.log("handleSubmit called with values:", values);
@@ -141,6 +145,7 @@ const Hostel = () => {
               <HostelSearchForm
                 handlePopup={handlePopup}
                 handleSearch={handleSearch}
+                isWriteAccessForHostel={isWriteAccessForHostel}
               />
             </Grid>
           </Grid>

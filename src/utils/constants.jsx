@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 export const REGEX = {
   email: /\S+@\S+\.[A-Za-z]{1}\S+/,
   onlyNumbers: /^[0-9]+$/,
@@ -22,7 +24,8 @@ export const REGEX = {
 export const DATE_FORMAT = "DD-MM-YYYY";
 
 // API URLS
-export const HOSTELLER_SAVE_OR_UPDATE_API = "/api/v1/hostel/save-update-hosteller";
+export const HOSTELLER_SAVE_OR_UPDATE_API =
+  "/api/v1/hostel/save-update-hosteller";
 export const HOSTELLER_LIST_API = "/api/v1/hostel/get-hosteller-list";
 export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
 
@@ -38,3 +41,16 @@ export const PAGINATION_MODEL = {
   page: 0,
   pageSize: 25,
 };
+
+const useAccess = (resourceId, type = "read") => {
+  const privileges = useSelector((state) => state.user.userPrivileges || []);
+  return privileges.some((p) => {
+    if (p.resourceId !== resourceId) return false;
+    if (type === "write") return p.readWriteFlag === true;
+    if (type === "read") return p.readOnlyFlag === true;
+    if (type === "terminate") return p.terminateFlag === true;
+    return false;
+  });
+};
+
+export default useAccess;
