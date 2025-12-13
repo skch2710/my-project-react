@@ -11,7 +11,7 @@ const IdleLogout = () => {
   const [showModal, setShowModal] = useState(false);
 
   /* =====================
-     TIMER (60s countdown)
+     EXPIRY TIME (60s)
   ===================== */
   const getExpiryTime = () => {
     const time = new Date();
@@ -19,20 +19,26 @@ const IdleLogout = () => {
     return time;
   };
 
-  const { seconds, restart } = useTimer({
-    expiryTimestamp: getExpiryTime(),
-    autoStart: false,
-    onExpire: () => handleIdle(),
-  });
-
   /* =====================
-     HANDLERS
+     IDLE HANDLER (LOGOUT)
   ===================== */
   const handleIdle = useCallback(() => {
     setShowModal(false);
     dispatch(logoutUser());
   }, [dispatch]);
 
+  /* =====================
+     COUNTDOWN TIMER
+  ===================== */
+  const { seconds, restart, pause } = useTimer({
+    expiryTimestamp: getExpiryTime(),
+    autoStart: false,
+    onExpire: handleIdle,
+  });
+
+  /* =====================
+     PROMPT HANDLER
+  ===================== */
   const handlePrompt = useCallback(() => {
     setShowModal(true);
     restart(getExpiryTime(), true);
@@ -56,10 +62,14 @@ const IdleLogout = () => {
 
   const { reset } = useIdleTimer(idleTimerConfig);
 
+  /* =====================
+     CONTINUE SESSION
+  ===================== */
   const handleContinue = useCallback(() => {
+    pause();
     setShowModal(false);
     reset();
-  }, [reset]);
+  }, [pause, reset]);
 
   /* =====================
      POPUP PROPS
@@ -72,7 +82,7 @@ const IdleLogout = () => {
       submitButtonProps: {
         label: "Stay Logged In",
         onClick: handleContinue,
-        color: "success"
+        color: "success",
       },
       children: (
         <Box sx={{ pt: 1 }}>
