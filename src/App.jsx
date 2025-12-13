@@ -4,6 +4,7 @@ import LoginPage from "./pages/login/LoginPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import SideNav from "./pages/sidenav/SideNav";
 import { getRoutesFromNavigation } from "./pages/sidenav/helper";
+import IdleLogout from "./components/idleLogout/IdleLogout";
 
 const App = () => {
   const navigations = useSelector((state) => state.user.navigations);
@@ -50,6 +51,7 @@ const App = () => {
           </Route>
         </Route>
       </Routes>
+      {isAuthenticated && <IdleLogout />}
     </BrowserRouter>
   );
 };

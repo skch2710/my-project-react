@@ -29,8 +29,8 @@ export const HOSTELLER_SAVE_OR_UPDATE_API =
 export const HOSTELLER_LIST_API = "/api/v1/hostel/get-hosteller-list";
 export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
 
-export const LOGIN_API = "/api/authenticate/login";
-export const REFRESH_TOKEN_API = "/api/authenticate/get-jwt-refresh-token";
+export const LOGIN_API = "/authenticate/login";
+export const REFRESH_TOKEN_API = "/authenticate/get-jwt-refresh-token";
 
 export const ADD = "Add";
 export const EDIT = "Edit";
