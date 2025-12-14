@@ -18,6 +18,7 @@ import {
   selectLoginError,
   selectLoginLoading,
 } from "../../store/slices/authSlice";
+import { clearSessionExpired } from "../../store/slices/sessionSlice";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const LoginForm = () => {
   // ✅ Use selectors from auth slice
   const loginError = useSelector(selectLoginError);
   const loginLoading = useSelector(selectLoginLoading);
+  const sessionExpired = useSelector((state) => state.session.sessionExpired);
 
   const [rememberMe, setRememberMe] = useState(false);
   const [initialValues, setInitialValues] = useState(loginForm);
@@ -61,6 +63,7 @@ const LoginForm = () => {
   const handleSubmit = async (values) => {
     console.log("Login Form Values:", values);
     try {
+      dispatch(clearSessionExpired());
       const encryptedPassword = await encrypt(values.password);
       const payload = {
         ...values,
@@ -107,6 +110,12 @@ const LoginForm = () => {
           <Grid container spacing={2} flexDirection={"column"}>
             {/* ✅ Error from auth slice */}
             {loginError && <Alert severity="error">{loginError}</Alert>}
+
+            {sessionExpired && (
+              <Alert severity="error">
+                Your session expired due to inactivity.
+              </Alert>
+            )}
 
             <Typography variant="h5" mb={2}>
               Login to Your Account !

@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { useTimer } from "react-timer-hook";
 import { logoutUser } from "../../store/slices/authSlice";
 import PopupSmall from "../popup/PopupSmall";
+import { setSessionExpired } from "../../store/slices/sessionSlice";
 
 const IdleLogout = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const IdleLogout = () => {
   ===================== */
   const handleIdle = useCallback(() => {
     setShowModal(false);
+    dispatch(setSessionExpired());
     dispatch(logoutUser());
   }, [dispatch]);
 
