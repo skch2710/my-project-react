@@ -1,15 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage/session";
-import { encryptor } from "./encryptTransform";
 
 import counterReducer from "./slices/counterSlice";
 import hostelReducer from "./slices/hostelSlice";
 import authReducer from "./slices/authSlice";
 import userReducer from "./slices/userSlice";
 import sessionReducer from "./slices/sessionSlice";
-
-import { injectStore } from "../utils/axiosHelper";
 
 /* ================== ROOT REDUCER ================== */
 const rootReducer = combineReducers({
@@ -20,31 +15,13 @@ const rootReducer = combineReducers({
   hostel: hostelReducer,
 });
 
-/* ================== PERSIST CONFIG ================== */
-const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: ["auth"],
-  transforms: [encryptor],
-};
-
-/* ================== PERSISTED REDUCER ================== */
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 /* ================== STORE ================== */
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
-      },
+      serializableCheck: false, // clean & safe
     }),
 });
 
-/* ================== AXIOS ================== */
-injectStore(store);
-
-/* ================== EXPORTS ================== */
-export const persistor = persistStore(store);
 export default store;

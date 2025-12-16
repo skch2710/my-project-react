@@ -12,19 +12,20 @@ import Button from "../../components/button/Button";
 import MuiCheckbox from "../../components/checkbox/MuiCheckbox";
 import { loginForm, validationSchema } from "./helper";
 import { encrypt, decrypt } from "../../utils/aesHelper";
+
 import {
   loginUser,
   resetLoginState,
   selectLoginError,
   selectLoginLoading,
 } from "../../store/slices/authSlice";
+import { profile } from "../../store/slices/userSlice";
 import { clearSessionExpired } from "../../store/slices/sessionSlice";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ✅ Use selectors from auth slice
   const loginError = useSelector(selectLoginError);
   const loginLoading = useSelector(selectLoginLoading);
   const sessionExpired = useSelector((state) => state.session.sessionExpired);
@@ -32,7 +33,7 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [initialValues, setInitialValues] = useState(loginForm);
 
-  // ✅ Load remember-me from localStorage
+  /* ================== LOAD REMEMBER ME ================== */
   useEffect(() => {
     const loadData = async () => {
       const stored = localStorage.getItem("rememberMe");
@@ -49,52 +50,50 @@ const LoginForm = () => {
         });
       }
     };
-
     loadData();
   }, []);
 
-  // ✅ Clear login error when component unmounts
+  /* ================== CLEANUP ================== */
   useEffect(() => {
     return () => {
       dispatch(resetLoginState());
     };
   }, [dispatch]);
 
+  /* ================== SUBMIT ================== */
   const handleSubmit = async (values) => {
-    console.log("Login Form Values:", values);
     try {
       dispatch(clearSessionExpired());
+
       const encryptedPassword = await encrypt(values.password);
+
       const payload = {
         ...values,
         password: encryptedPassword,
       };
 
-      const result = await dispatch(loginUser(payload));
+      // 🔥 LOGIN → PROFILE → NAVIGATE
+      await dispatch(loginUser(payload))
+        .unwrap()
+        .then(() => dispatch(profile({emailId: payload.emailId})).unwrap());
 
-      if (result.meta.requestStatus === "fulfilled") {
-        toast.success("Login successful!");
+      toast.success("Login successful!");
 
-        if (rememberMe) {
-          localStorage.setItem(
-            "rememberMe",
-            JSON.stringify({
-              emailId: values.emailId,
-              password: encryptedPassword,
-            })
-          );
-        } else if (!rememberMe && localStorage.getItem("rememberMe")) {
-          localStorage.removeItem("rememberMe");
-        }
-
-        // Clear any previous login error
-        dispatch(resetLoginState());
-
-        // navigate("/", { replace: true });
+      if (rememberMe) {
+        localStorage.setItem(
+          "rememberMe",
+          JSON.stringify({
+            emailId: values.emailId,
+            password: encryptedPassword,
+          })
+        );
+      } else {
+        localStorage.removeItem("rememberMe");
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-      toast.error("An unexpected error occurred");
+
+      navigate("/", { replace: true });
+    } catch (err) {
+      toast.error(err || "Login failed");
     }
   };
 
@@ -107,10 +106,8 @@ const LoginForm = () => {
     >
       {({ handleSubmit }) => (
         <Form id="loginForm">
-          <Grid container spacing={2} flexDirection={"column"}>
-            {/* ✅ Error from auth slice */}
+          <Grid container spacing={2} flexDirection="column">
             {loginError && <Alert severity="error">{loginError}</Alert>}
-
             {sessionExpired && (
               <Alert severity="error">
                 Your session expired due to inactivity.
@@ -118,10 +115,9 @@ const LoginForm = () => {
             )}
 
             <Typography variant="h5" mb={2}>
-              Login to Your Account !
+              Login to Your Account
             </Typography>
 
-            {/* EmailId Field */}
             <Grid size={6}>
               <FormicField
                 startIcon={<MailLockOutlinedIcon fontSize="small" />}
@@ -129,12 +125,10 @@ const LoginForm = () => {
                 name="emailId"
                 label="Email ID"
                 placeholder="Enter Email ID"
-                maxLength={100}
                 required
               />
             </Grid>
 
-            {/* Password Field */}
             <Grid size={6}>
               <FormicField
                 startIcon={<LockOutlineIcon fontSize="small" />}
@@ -142,26 +136,21 @@ const LoginForm = () => {
                 name="password"
                 label="Password"
                 placeholder="Enter Password"
-                maxLength={50}
                 required
               />
             </Grid>
 
-            {/* Remember Me */}
             <Grid size={6}>
               <MuiCheckbox
-                name="rememberMe"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
               <FormLabel>Remember Me</FormLabel>
             </Grid>
 
-            {/* Submit Button */}
-            <Grid size={7} justifyContent="flex-end" container display="flex">
+            <Grid size={7} justifyContent="flex-end" container>
               <Button
                 label="Login"
-                color="primary"
                 onClick={handleSubmit}
                 loading={loginLoading}
                 disabled={loginLoading}

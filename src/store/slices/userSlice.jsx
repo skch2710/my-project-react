@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { logoutUser } from "./authSlice";
-import { USER_PROFILE_API } from "../../utils/constants";
 import { POST } from "../../utils/axiosHelper";
+import { USER_PROFILE_API } from "../../utils/constants";
+import { logoutUser } from "./authSlice";
 
-/* ================== INITIAL STATE ================== */
+/* ================== STATE ================== */
 const initialState = {
   user: null,
   navigations: [],
@@ -15,26 +15,20 @@ const initialState = {
   },
 };
 
-/* ================== THUNK ================== */
+/* ================== PROFILE ================== */
 export const profile = createAsyncThunk(
   "user/profile",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await POST(USER_PROFILE_API, payload);
+      const response = await POST(USER_PROFILE_API,payload);
 
-      if (response?.statusCode === 200 && response?.data) {
+      if (response.statusCode === 200) {
         return response.data;
       }
 
-      return rejectWithValue(
-        response?.errorMessage || "Unable to get the profile data"
-      );
-    } catch (error) {
-      return rejectWithValue(
-        error?.response?.data?.errorMessage ||
-          error.message ||
-          "Unable to get the profile data"
-      );
+      return rejectWithValue(response.errorMessage);
+    } catch (err) {
+      return rejectWithValue(err.message);
     }
   }
 );
@@ -44,9 +38,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
 
-  reducers: {
-    clearUser: () => initialState,
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
     builder
@@ -54,23 +46,18 @@ const userSlice = createSlice({
         state.load.loading = true;
         state.load.error = null;
       })
-
       .addCase(profile.fulfilled, (state, action) => {
         const { user, navigations } = action.payload || {};
-
         state.user = user ?? null;
         state.userPrivileges = user?.userPrivilege ?? [];
         state.navigations = navigations ?? [];
-        state.load.loading = false;
         state.profileLoaded = true;
+        state.load.loading = false;
       })
-
       .addCase(profile.rejected, (state, action) => {
         state.load.loading = false;
         state.load.error = action.payload;
-        state.profileLoaded = false;
       })
-
       .addCase(logoutUser.fulfilled, () => initialState);
   },
 });

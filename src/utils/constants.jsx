@@ -30,7 +30,8 @@ export const HOSTELLER_LIST_API = "/api/v1/hostel/get-hosteller-list";
 export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
 
 export const LOGIN_API = "/authenticate/login";
-export const REFRESH_TOKEN_API = "/authenticate/get-jwt-refresh-token";
+export const REFRESH_TOKEN_API = "/authenticate/refresh";
+export const LOGOUT_API = "/authenticate/logout";
 
 export const USER_PROFILE_API = "/api/v1/user/profile";
 
