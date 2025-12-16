@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage/session";
+import { encryptor } from "./encryptTransform";
 
 import counterReducer from "./slices/counterSlice";
 import hostelReducer from "./slices/hostelSlice";
@@ -10,9 +11,7 @@ import sessionReducer from "./slices/sessionSlice";
 
 import { injectStore } from "../utils/axiosHelper";
 
-/* ======================================
-   ROOT REDUCER
-====================================== */
+/* ================== ROOT REDUCER ================== */
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
@@ -21,23 +20,18 @@ const rootReducer = combineReducers({
   hostel: hostelReducer,
 });
 
-/* ======================================
-   REDUX PERSIST CONFIG
-====================================== */
+/* ================== PERSIST CONFIG ================== */
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "user"],
+  whitelist: ["auth"],
+  transforms: [encryptor],
 };
 
-/* ======================================
-   PERSISTED REDUCER
-====================================== */
+/* ================== PERSISTED REDUCER ================== */
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-/* ======================================
-   STORE CREATION
-====================================== */
+/* ================== STORE ================== */
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -48,13 +42,9 @@ const store = configureStore({
     }),
 });
 
-/* ======================================
-   INJECT STORE INTO AXIOS
-====================================== */
+/* ================== AXIOS ================== */
 injectStore(store);
 
-/* ======================================
-   EXPORTS
-====================================== */
+/* ================== EXPORTS ================== */
 export const persistor = persistStore(store);
 export default store;

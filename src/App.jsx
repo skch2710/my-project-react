@@ -1,5 +1,6 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import LoginPage from "./pages/login/LoginPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import SideNav from "./pages/sidenav/SideNav";
@@ -7,50 +8,44 @@ import { getRoutesFromNavigation } from "./pages/sidenav/helper";
 import IdleLogout from "./components/idleLogout/IdleLogout";
 
 const App = () => {
-  const navigations = useSelector((state) => state.user.navigations);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const navigations = useSelector((state) => state.user.navigations);
 
-  const apiRoutes = getRoutesFromNavigation(navigations);
-  const routes = apiRoutes || [];
-
-  const defaultPath = routes.length > 0 ? routes[0].path : "/";
+  const routes = getRoutesFromNavigation(navigations);
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* ROOT */}
+        {/* PUBLIC */}
         <Route
-          path="/"
+          path="/login"
           element={
-            isAuthenticated ? (
-              <Navigate to={defaultPath} replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
           }
         />
-
-        {/* LOGIN (PUBLIC) */}
-        <Route path="/login" element={<LoginPage />} />
 
         {/* PROTECTED */}
         <Route element={<PrivateRoute />}>
           <Route element={<SideNav />}>
             {routes.map((route, index) => (
               <Route
-                key={`${route.path}-${index}`}
+                key={index}
                 path={route.path}
-                element={
-                  route.element ? <route.element /> : <div>No Component</div>
-                }
+                element={<route.element />}
               />
             ))}
-
-            {/* FALLBACK FOR AUTH USERS */}
-            <Route path="*" element={<Navigate to={defaultPath} replace />} />
           </Route>
         </Route>
+
+        {/* FALLBACK */}
+        <Route
+          path="*"
+          element={
+            isAuthenticated ? <SideNav /> : <Navigate to="/login" replace />
+          }
+        />
       </Routes>
+
       {isAuthenticated && <IdleLogout />}
     </BrowserRouter>
   );

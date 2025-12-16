@@ -7,6 +7,7 @@ const initialState = {
   isAuthenticated: false,
   token: null,
   refreshToken: null,
+  emailId: null,
 
   login: {
     loading: false,
@@ -24,17 +25,13 @@ export const loginUser = createAsyncThunk(
       const response = await POST(LOGIN_API, payload);
 
       if (response.statusCode === 200 && response.data) {
-        const { jwtDTO, user, navigations } = response.data;
+        const { jwtDTO } = response.data;
 
         return {
           // Tokens
           token: jwtDTO?.access_token,
           refreshToken: jwtDTO?.refresh_token,
-
-          // User data passed to userSlice
-          user,
-          navigations,
-          userPrivileges: user?.userPrivilege || [],
+          emailId: payload.emailId,
         };
       }
 
@@ -91,6 +88,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.refreshToken = action.payload.refreshToken;
         state.tokenType = action.payload.tokenType;
+        state.emailId = action.payload.emailId;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.login.loading = false;

@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { isTokenExpired } from "../utils/tokenUtils";
 import { REFRESH_TOKEN_API, LOGIN_API } from "./constants";
 import { updateToken, logoutUser } from "../store/slices/authSlice";
-import { clearUser } from "../store/slices/userSlice";
 
 /* ======================================
    INJECT REDUX STORE

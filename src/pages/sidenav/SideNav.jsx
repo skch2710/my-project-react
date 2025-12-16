@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+import {
+  Box,
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Grid,
+  Tooltip,
+  Typography,
+  Collapse,
+  CircularProgress,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { Grid, Tooltip, Typography } from "@mui/material";
-import Collapse from "@mui/material/Collapse";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IoMdLogOut } from "react-icons/io";
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  profile,
   selectNavigations,
   selectUserName,
+  selectProfileLoaded,
 } from "../../store/slices/userSlice";
 import { logoutUser } from "../../store/slices/authSlice";
 import { getNav } from "./helper";
@@ -31,8 +38,7 @@ import logo from "../../assets/logo.png";
 
 const drawerWidth = 220;
 
-/* ================== STYLES ================== */
-
+/* ================== DRAWER STYLES ================== */
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -97,45 +103,77 @@ const generateKey = (item, index, parentIndex = null) => {
 };
 
 /* ================== COMPONENT ================== */
-
 export default function SideNav() {
-  const [open, setOpen] = useState(true);
-  const [navigation, setNavigation] = useState([]);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // ✅ from userSlice
   const apiNavigations = useSelector(selectNavigations);
   const userName = useSelector(selectUserName);
+  const profileLoaded = useSelector(selectProfileLoaded);
+  const loading = useSelector((state) => state.user.load.loading);
+  const emailId = useSelector((state) => state.auth.emailId);
 
-  /* ---------- Convert API Nav ---------- */
+  const [open, setOpen] = useState(true);
+  const [navigation, setNavigation] = useState([]);
+  const [redirected, setRedirected] = useState(false);
+
+  /* ================== LOAD PROFILE (ONCE) ================== */
   useEffect(() => {
-    if (apiNavigations?.length) {
-      setNavigation(getNav(apiNavigations));
+    // Block if already loaded OR already loading
+    if (profileLoaded || loading) return;
+
+    const loadProfile = async () => {
+      try {
+        await dispatch(profile({ emailId })).unwrap();
+      } catch (err) {
+        dispatch(logoutUser());
+        navigate("/login", { replace: true });
+      }
+    };
+
+    loadProfile();
+  }, [dispatch, emailId, profileLoaded, loading, navigate]);
+
+  /* ================== BUILD NAV + REDIRECT ================== */
+  useEffect(() => {
+    if (!apiNavigations?.length) return;
+
+    const nav = getNav(apiNavigations);
+    setNavigation(nav);
+
+    if (
+      !redirected &&
+      (location.pathname === "/" || location.pathname === "")
+    ) {
+      setRedirected(true);
+      navigate(nav[0].resourcePath, { replace: true });
     }
-  }, [apiNavigations]);
+  }, [apiNavigations, location.pathname, navigate, redirected]);
 
-  const handleDrawer = () => setOpen(!open);
-
-  const handleCollapseToggle = (index) => {
-    setNavigation((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, collapsed: !item.collapsed } : item
-      )
-    );
-  };
-
-  /* ---------- Logout ---------- */
+  /* ================== LOGOUT ================== */
   const handleLogout = async () => {
-    try {
-      await dispatch(logoutUser()).unwrap(); // ✅ Auth cleared
-      navigate("/login", { replace: true });
-    } catch {
-      navigate("/login", { replace: true });
-    }
+    await dispatch(logoutUser());
+    navigate("/login", { replace: true });
   };
 
+  /* ================== LOADER ================== */
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  /* ================== RENDER ================== */
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -143,11 +181,11 @@ export default function SideNav() {
       {/* ================== APP BAR ================== */}
       <MainAppBar
         position="fixed"
-        sx={{ backgroundColor: "#ffffff", color: "#2f2f2f", boxShadow: 1 }}
         open={open}
+        sx={{ backgroundColor: "#fff", color: "#000" }}
       >
         <Toolbar>
-          <IconButton onClick={handleDrawer} edge="start">
+          <IconButton onClick={() => setOpen((prev) => !prev)}>
             <MenuIcon />
           </IconButton>
 
@@ -159,23 +197,14 @@ export default function SideNav() {
             style={{ marginLeft: 20 }}
           />
 
-          <div
-            style={{
-              marginLeft: "auto",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Typography sx={{ marginRight: 2 }}>
-              {userName || "User"}
-            </Typography>
-
-            <Tooltip title="Logout" arrow>
+          <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
+            <Typography sx={{ mr: 2 }}>{userName || "User"}</Typography>
+            <Tooltip title="Logout">
               <IconButton onClick={handleLogout}>
-                <IoMdLogOut style={{ color: "black" }} />
+                <IoMdLogOut />
               </IconButton>
             </Tooltip>
-          </div>
+          </Box>
         </Toolbar>
       </MainAppBar>
 
@@ -190,7 +219,17 @@ export default function SideNav() {
               return (
                 <React.Fragment key={key}>
                   <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleCollapseToggle(index)}>
+                    <ListItemButton
+                      onClick={() =>
+                        setNavigation((prev) =>
+                          prev.map((nav, i) =>
+                            i === index
+                              ? { ...nav, collapsed: !nav.collapsed }
+                              : nav
+                          )
+                        )
+                      }
+                    >
                       <ListItemIcon>{item.icon}</ListItemIcon>
                       <ListItemText primary={item.resourceName} />
                       {item.collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}

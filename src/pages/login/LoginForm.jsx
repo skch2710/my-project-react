@@ -90,7 +90,7 @@ const LoginForm = () => {
         // Clear any previous login error
         dispatch(resetLoginState());
 
-        navigate("/", { replace: true });
+        // navigate("/", { replace: true });
       }
     } catch (error) {
       console.error("Login failed:", error);

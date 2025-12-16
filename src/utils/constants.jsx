@@ -32,6 +32,8 @@ export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
 export const LOGIN_API = "/authenticate/login";
 export const REFRESH_TOKEN_API = "/authenticate/get-jwt-refresh-token";
 
+export const USER_PROFILE_API = "/api/v1/user/profile";
+
 export const ADD = "Add";
 export const EDIT = "Edit";
 export const VIEW = "View";
@@ -42,7 +44,7 @@ export const PAGINATION_MODEL = {
   pageSize: 25,
 };
 
-const useAccess = (resourceId, type = "read") => {
+const useAccess = (resourceId, type) => {
   const privileges = useSelector((state) => state.user.userPrivileges || []);
   return privileges.some((p) => {
     if (p.resourceId !== resourceId) return false;
