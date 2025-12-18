@@ -148,6 +148,7 @@ const LoginForm = () => {
 
             <Grid size={7} justifyContent="flex-end" container>
               <Button
+                color="primary"
                 label="Login"
                 onClick={handleSubmit}
                 loading={loginLoading}
