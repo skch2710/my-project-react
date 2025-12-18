@@ -72,11 +72,8 @@ const LoginForm = () => {
         password: encryptedPassword,
       };
 
-      // 🔥 LOGIN → PROFILE → NAVIGATE
       await dispatch(loginUser(payload))
-        .unwrap()
-        .then(() => dispatch(profile({emailId: payload.emailId})).unwrap());
-
+        .unwrap();
       toast.success("Login successful!");
 
       if (rememberMe) {

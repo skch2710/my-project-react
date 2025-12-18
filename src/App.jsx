@@ -1,52 +1,69 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useMemo } from "react";
 
 import LoginPage from "./pages/login/LoginPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import SideNav from "./pages/sidenav/SideNav";
-import { getRoutesFromNavigation } from "./pages/sidenav/helper";
+import NotFound from "./pages/notfound/NotFound";
 import IdleLogout from "./components/idleLogout/IdleLogout";
+import AppInitializer from "./bootstrap/AppInitializer";
+import { getRoutesFromNavigation } from "./pages/sidenav/helper";
 
 const App = () => {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const navigations = useSelector((state) => state.user.navigations);
+  const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
+  const navigations = useSelector((s) => s.user.navigations);
 
-  const routes = getRoutesFromNavigation(navigations);
+  // Dynamic routes (paths already normalized)
+  const routes = useMemo(
+    () => getRoutesFromNavigation(navigations),
+    [navigations]
+  );
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* PUBLIC */}
-        <Route
-          path="/login"
-          element={
-            isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
-          }
-        />
+      <AppInitializer>
+        <Routes>
+          {/* PUBLIC */}
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+            }
+          />
 
-        {/* PROTECTED */}
-        <Route element={<PrivateRoute />}>
-          <Route element={<SideNav />}>
-            {routes.map((route, index) => (
+          {/* PROTECTED */}
+          <Route element={<PrivateRoute />}>
+            <Route element={<SideNav />}>
+              {/* INDEX ROUTE (CRITICAL) */}
               <Route
-                key={index}
-                path={route.path}
-                element={<route.element />}
+                index
+                element={
+                  routes.length ? (
+                    <Navigate to={routes[0].path} replace />
+                  ) : (
+                    <NotFound />
+                  )
+                }
               />
-            ))}
+
+              {routes.map((route, index) => {
+                const Element = route.element;
+                return (
+                  <Route key={index} path={route.path} element={<Element />} />
+                );
+              })}
+
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Route>
-        </Route>
 
-        {/* FALLBACK */}
-        <Route
-          path="*"
-          element={
-            isAuthenticated ? <SideNav /> : <Navigate to="/login" replace />
-          }
-        />
-      </Routes>
+          {/* PUBLIC FALLBACK */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
 
-      {isAuthenticated && <IdleLogout />}
+        {isAuthenticated && <IdleLogout />}
+      </AppInitializer>
     </BrowserRouter>
   );
 };

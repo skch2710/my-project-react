@@ -9,7 +9,7 @@ const initialState = {
   navigations: [],
   userPrivileges: [],
   profileLoaded: false,
-  load: {
+  profile: {
     loading: false,
     error: null,
   },
@@ -20,12 +20,10 @@ export const profile = createAsyncThunk(
   "user/profile",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await POST(USER_PROFILE_API,payload);
-
+      const response = await POST(USER_PROFILE_API, payload);
       if (response.statusCode === 200) {
         return response.data;
       }
-
       return rejectWithValue(response.errorMessage);
     } catch (err) {
       return rejectWithValue(err.message);
@@ -43,8 +41,8 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(profile.pending, (state) => {
-        state.load.loading = true;
-        state.load.error = null;
+        state.loading = true;
+        state.error = null;
       })
       .addCase(profile.fulfilled, (state, action) => {
         const { user, navigations } = action.payload || {};
@@ -52,11 +50,11 @@ const userSlice = createSlice({
         state.userPrivileges = user?.userPrivilege ?? [];
         state.navigations = navigations ?? [];
         state.profileLoaded = true;
-        state.load.loading = false;
+        state.loading = false;
       })
       .addCase(profile.rejected, (state, action) => {
-        state.load.loading = false;
-        state.load.error = action.payload;
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(logoutUser.fulfilled, () => initialState);
   },

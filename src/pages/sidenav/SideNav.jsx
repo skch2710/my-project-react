@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -17,13 +17,13 @@ import {
   Tooltip,
   Typography,
   Collapse,
-  CircularProgress,
+  Skeleton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IoMdLogOut } from "react-icons/io";
-import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -38,7 +38,7 @@ import logo from "../../assets/logo.png";
 
 const drawerWidth = 220;
 
-/* ================== DRAWER STYLES ================== */
+/* ================== DRAWER MIXINS ================== */
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -55,35 +55,15 @@ const closedMixin = (theme) => ({
   }),
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
 });
 
-const MainAppBar = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
+/* ================== STYLES ================== */
 const MainDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
-  boxSizing: "border-box",
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
@@ -94,14 +74,6 @@ const MainDrawer = styled(Drawer, {
   }),
 }));
 
-/* ================== KEY GENERATOR ================== */
-const generateKey = (item, index, parentIndex = null) => {
-  if (item.resourceId) return `nav-${item.resourceId}`;
-  if (item.resourceName) return `nav-${item.resourceName.replace(/\s+/g, "-")}`;
-  if (parentIndex !== null) return `nav-${parentIndex}-${index}`;
-  return `nav-${index}`;
-};
-
 /* ================== COMPONENT ================== */
 export default function SideNav() {
   const dispatch = useDispatch();
@@ -111,45 +83,57 @@ export default function SideNav() {
   const apiNavigations = useSelector(selectNavigations);
   const userName = useSelector(selectUserName);
   const profileLoaded = useSelector(selectProfileLoaded);
-  const loading = useSelector((state) => state.user.load.loading);
-  const emailId = useSelector((state) => state.auth.emailId);
+  const loading = useSelector((s) => s.user.profile.loading);
+  const emailId = useSelector((s) => s.auth.emailId);
 
   const [open, setOpen] = useState(true);
   const [navigation, setNavigation] = useState([]);
   const [redirected, setRedirected] = useState(false);
 
-  /* ================== LOAD PROFILE (ONCE) ================== */
+  /* ================== LOAD PROFILE ================== */
   useEffect(() => {
-    // Block if already loaded OR already loading
-    if (profileLoaded || loading) return;
+    if (!emailId || profileLoaded || loading) return;
 
-    const loadProfile = async () => {
-      try {
-        await dispatch(profile({ emailId })).unwrap();
-      } catch (err) {
+    dispatch(profile({ emailId }))
+      .unwrap()
+      .catch(() => {
         dispatch(logoutUser());
         navigate("/login", { replace: true });
-      }
-    };
-
-    loadProfile();
+      });
   }, [dispatch, emailId, profileLoaded, loading, navigate]);
 
-  /* ================== BUILD NAV + REDIRECT ================== */
+  /* ================== BUILD NAV ================== */
   useEffect(() => {
     if (!apiNavigations?.length) return;
 
-    const nav = getNav(apiNavigations);
-    setNavigation(nav);
+    setNavigation(
+      getNav(apiNavigations).map((item) => ({
+        ...item,
+        collapsed: item.collapsed ?? false,
+      }))
+    );
+  }, [apiNavigations]);
 
+  /* ================== DEFAULT REDIRECT ================== */
+  useEffect(() => {
     if (
+      navigation.length &&
       !redirected &&
       (location.pathname === "/" || location.pathname === "")
     ) {
       setRedirected(true);
-      navigate(nav[0].resourcePath, { replace: true });
+      navigate(navigation[0].resourcePath, { replace: true });
     }
-  }, [apiNavigations, location.pathname, navigate, redirected]);
+  }, [navigation, redirected, location.pathname, navigate]);
+
+  /* ================== TOGGLE SUB MENU ================== */
+  const toggleCollapse = useCallback((index) => {
+    setNavigation((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, collapsed: !item.collapsed } : item
+      )
+    );
+  }, []);
 
   /* ================== LOGOUT ================== */
   const handleLogout = async () => {
@@ -160,16 +144,13 @@ export default function SideNav() {
   /* ================== LOADER ================== */
   if (loading) {
     return (
-      <Box
-        sx={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <List sx={{ mt: 8, px: 1 }}>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <ListItem key={i}>
+            <Skeleton variant="rectangular" width="100%" height={36} />
+          </ListItem>
+        ))}
+      </List>
     );
   }
 
@@ -178,14 +159,13 @@ export default function SideNav() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
-      {/* ================== APP BAR ================== */}
-      <MainAppBar
+      {/* APP BAR */}
+      <AppBar
         position="fixed"
-        open={open}
-        sx={{ backgroundColor: "#fff", color: "#000" }}
+        sx={{ zIndex: 1201, background: "#fff", color: "#000" }}
       >
         <Toolbar>
-          <IconButton onClick={() => setOpen((prev) => !prev)}>
+          <IconButton onClick={() => setOpen((p) => !p)}>
             <MenuIcon />
           </IconButton>
 
@@ -206,50 +186,66 @@ export default function SideNav() {
             </Tooltip>
           </Box>
         </Toolbar>
-      </MainAppBar>
+      </AppBar>
 
-      {/* ================== DRAWER ================== */}
+      {/* DRAWER */}
       <MainDrawer variant="permanent" open={open}>
         <Divider />
+
         <List sx={{ mt: 8 }}>
           {navigation.map((item, index) => {
-            const key = generateKey(item, index);
+            const parentActive = location.pathname.startsWith(
+              item.resourcePath
+            );
 
             if (item.subNav?.length) {
               return (
-                <React.Fragment key={key}>
+                <React.Fragment key={item.resourceName}>
                   <ListItem disablePadding>
                     <ListItemButton
-                      onClick={() =>
-                        setNavigation((prev) =>
-                          prev.map((nav, i) =>
-                            i === index
-                              ? { ...nav, collapsed: !nav.collapsed }
-                              : nav
-                          )
-                        )
-                      }
+                      selected={parentActive}
+                      onClick={() => toggleCollapse(index)}
                     >
-                      <ListItemIcon>{item.icon}</ListItemIcon>
-                      <ListItemText primary={item.resourceName} />
-                      {item.collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                      <ListItemIcon sx={{ minWidth: 40 }}>
+                        {item.icon}
+                      </ListItemIcon>
+
+                      <ListItemText
+                        primary={item.resourceName}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+
+                      {/* ✅ Arrow hidden when drawer closed */}
+                      {open &&
+                        (item.collapsed ? (
+                          <ExpandMoreIcon />
+                        ) : (
+                          <ExpandLessIcon />
+                        ))}
                     </ListItemButton>
                   </ListItem>
 
-                  <Collapse in={!item.collapsed} timeout="auto">
+                  <Collapse in={!item.collapsed}>
                     <List component="div" disablePadding>
-                      {item.subNav.map((sub, i) => (
+                      {item.subNav.map((sub) => (
                         <ListItem
-                          key={generateKey(sub, i, index)}
+                          key={sub.resourceName}
                           disablePadding
-                          sx={{ pl: 4 }}
+                          sx={{ pl: open ? 4 : 0 }}
                         >
                           <ListItemButton
-                            component={Link}
+                            component={NavLink}
                             to={sub.resourcePath}
+                            selected={location.pathname === sub.resourcePath}
                           >
-                            <ListItemIcon>{sub.icon}</ListItemIcon>
-                            <ListItemText primary={sub.resourceName} />
+                            <ListItemIcon sx={{ minWidth: 40 }}>
+                              {sub.icon}
+                            </ListItemIcon>
+
+                            <ListItemText
+                              primary={sub.resourceName}
+                              sx={{ opacity: open ? 1 : 0 }}
+                            />
                           </ListItemButton>
                         </ListItem>
                       ))}
@@ -260,10 +256,17 @@ export default function SideNav() {
             }
 
             return (
-              <ListItem key={key} disablePadding>
-                <ListItemButton component={Link} to={item.resourcePath}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.resourceName} />
+              <ListItem key={item.resourceName} disablePadding>
+                <ListItemButton
+                  component={NavLink}
+                  to={item.resourcePath}
+                  selected={location.pathname === item.resourcePath}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={item.resourceName}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
                 </ListItemButton>
               </ListItem>
             );
@@ -271,7 +274,7 @@ export default function SideNav() {
         </List>
       </MainDrawer>
 
-      {/* ================== CONTENT ================== */}
+      {/* CONTENT */}
       <Grid component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
         <Outlet />
       </Grid>
