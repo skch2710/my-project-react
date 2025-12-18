@@ -35,7 +35,6 @@ const IdleLogout = () => {
   const { seconds, restart, pause } = useTimer({
     expiryTimestamp: getExpiryTime(),
     autoStart: false,
-    onExpire: handleIdle,
   });
 
   /* =====================

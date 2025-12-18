@@ -74,5 +74,5 @@ export const selectLoginLoading = (state) => state.auth.login.loading;
 export const selectLoginError = (state) => state.auth.login.error;
 
 /* ================== EXPORTS ================== */
-export const { resetLoginState, updateToken, setAuth } = authSlice.actions;
+export const { resetLoginState } = authSlice.actions;
 export default authSlice.reducer;

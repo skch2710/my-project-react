@@ -1,4 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage/session";
+import { encryptor } from "./encryptTransform";
 
 import counterReducer from "./slices/counterSlice";
 import hostelReducer from "./slices/hostelSlice";
@@ -15,13 +18,28 @@ const rootReducer = combineReducers({
   hostel: hostelReducer,
 });
 
+/* ================== PERSIST CONFIG ================== */
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"],
+  transforms: [encryptor],
+};
+
+/* ================== PERSISTED REDUCER ================== */
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 /* ================== STORE ================== */
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // clean & safe
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
     }),
 });
 
+/* ================== EXPORTS ================== */
+export const persistor = persistStore(store);
 export default store;

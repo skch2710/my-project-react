@@ -90,8 +90,6 @@ const LoginForm = () => {
       } else {
         localStorage.removeItem("rememberMe");
       }
-
-      navigate("/", { replace: true });
     } catch (err) {
       toast.error(err || "Login failed");
     }
