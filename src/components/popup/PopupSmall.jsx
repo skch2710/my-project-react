@@ -17,22 +17,14 @@ const PopupSmall = (props) => {
   } = props;
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={handleClose} 
-      fullWidth 
-      maxWidth="xs"
-    >
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
-        {cancelButtonProps.label && (
-          <Button 
-            onClick={handleClose}
-            {...cancelButtonProps}
-          />
-        )}
         <Button {...submitButtonProps} />
+        {cancelButtonProps?.label && (
+          <Button onClick={handleClose} {...cancelButtonProps} />
+        )}
       </DialogActions>
     </Dialog>
   );

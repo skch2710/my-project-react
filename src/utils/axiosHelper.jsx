@@ -1,5 +1,7 @@
 import axios from "axios";
 import { REFRESH_TOKEN_API } from "./constants";
+import FileSaver from "file-saver";
+import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -64,7 +66,24 @@ api.interceptors.response.use(
 export const GET = (url, params = {}) =>
   api.get(url, { params }).then((res) => res.data);
 
-export const POST = (url, payload) =>
-  api.post(url, payload).then((res) => res.data);
+export const POST = async (url, payload) =>
+  await api.post(url, payload).then((res) => res.data);
+
+export const DOWNLOAD_FILE = async (url, payload) => {
+  try {
+    const response = await api.post(url, payload, { responseType: "blob" });
+    if (response && response.status === 200 && response.data) {
+      const fileType = response.headers["content-type"];
+      const filename =
+        response.headers["content-disposition"]?.match(/filename="(.+?)"/)[1];
+      const blob = new Blob([response.data], { type: fileType });
+      FileSaver.saveAs(blob, filename);
+    } else {
+      toast.error("Error occurred while downloading the file.");
+    }
+  } catch (error) {
+    console.error("File download error:", error);
+  }
+};
 
 export default api;

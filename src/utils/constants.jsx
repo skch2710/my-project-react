@@ -28,6 +28,7 @@ export const HOSTELLER_SAVE_OR_UPDATE_API =
   "/api/v1/hostel/save-update-hosteller";
 export const HOSTELLER_LIST_API = "/api/v1/hostel/get-hosteller-list";
 export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
+export const HOSTELLER_INACTIVE_API = "/api/v1/hostel/inactive-hosteller";
 
 export const LOGIN_API = "/authenticate/login";
 export const REFRESH_TOKEN_API = "/authenticate/refresh";

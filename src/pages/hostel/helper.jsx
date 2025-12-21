@@ -56,10 +56,9 @@ export const revisedFields = [
   { field: "reason", headerName: "Reason", width: 150 },
   { field: "vacatedDate", headerName: "Vacated Date", width: 150 },
   { field: "active", headerName: "Active", width: 150 },
-]
+];
 
-
-export const buildColumns = (onAction,isWriteAccessForHostel) => {
+export const buildColumns = (onAction, isWriteAccessForHostel) => {
   const actionColumn = {
     field: "actions",
     type: "actions",
@@ -75,16 +74,18 @@ export const buildColumns = (onAction,isWriteAccessForHostel) => {
         label={VIEW}
         onClick={() => onAction(VIEW, params.row)}
       />,
-      <GridActionsCellItem disabled={!isWriteAccessForHostel}
+      <GridActionsCellItem
+        disabled={!isWriteAccessForHostel}
         icon={
           <Tooltip title="Edit Details">
-            <Edit fontSize="small"/>
+            <Edit fontSize="small" />
           </Tooltip>
         }
         label={EDIT}
         onClick={() => onAction(EDIT, params.row)}
       />,
       <GridActionsCellItem
+        disabled={!params.row.active}
         icon={
           <Tooltip title="Delete">
             <DeleteForeverOutlinedIcon fontSize="small" />
@@ -104,7 +105,7 @@ export const buildColumns = (onAction,isWriteAccessForHostel) => {
   return [actionColumn, ...revisedFields];
 };
 
-export const searchPayload = {
+export const getDefaultSearchPayload = () => ({
   pageNumber: 1,
   pageSize: 25,
   sortBy: "",
@@ -117,11 +118,10 @@ export const searchPayload = {
   fullLoad: false,
   fullName: "",
   emailId: "",
-};
+});
 
 export const roomTypeOptions = [
   { roomTypeId: 1, roomType: "Single" },
   { roomTypeId: 2, roomType: "Double" },
   { roomTypeId: 3, roomType: "Suite" },
 ];
-

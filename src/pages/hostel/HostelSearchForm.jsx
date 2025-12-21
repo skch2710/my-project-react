@@ -2,15 +2,20 @@ import { Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import FormicField from "../../components/fields/FormicField";
-import { searchPayload } from "./helper";
 import Button from "../../components/button/Button";
 import { ADD } from "../../utils/constants";
 
 const HostelSearchForm = (props) => {
-  const { handlePopup, handleSearch, isWriteAccessForHostel } = props;
+  const {
+    handlePopup,
+    handleSearch,
+    searchValues,
+    handleClear,
+    isWriteAccessForHostel,
+  } = props;
   return (
     <Formik
-      initialValues={searchPayload}
+      initialValues={searchValues}
       onSubmit={(values) => handleSearch(values)}
       enableReinitialize
     >
@@ -55,7 +60,7 @@ const HostelSearchForm = (props) => {
                   label="Clear"
                   color="primary"
                   variant="outlined"
-                  onClick={() => resetForm()}
+                  onClick={() => handleClear()}
                 />
               </Grid>
             </Grid>

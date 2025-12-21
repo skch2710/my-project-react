@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { POST } from "../../utils/axiosHelper";
+import { DOWNLOAD_FILE, POST } from "../../utils/axiosHelper";
 import {
   HOSTELLER_SAVE_OR_UPDATE_API,
   HOSTELLER_GET_API,
+  HOSTELLER_INACTIVE_API,
 } from "../../utils/constants";
 
 /* -------------------------------------------------------
@@ -44,7 +45,7 @@ export const getHostellers = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await POST(HOSTELLER_GET_API, payload);
-      console.log("Responce : ",response);
+      console.log("Responce : ", response);
       if (response.statusCode === 200 && response.data?.content) {
         const converted = response.data.content.map((item) => ({
           ...item,
@@ -52,13 +53,40 @@ export const getHostellers = createAsyncThunk(
           joiningDate: toDDMMYYYY(item.joiningDate),
         }));
         response.data.content = converted;
-        console.log("Convered Data : ",response);
+        console.log("Convered Data : ", response);
       }
       return response?.data;
     } catch (error) {
       console.error("Error getHostellers:", error);
       return rejectWithValue(
         getErrorMessage(error, "Failed to fetch hostellers")
+      );
+    }
+  }
+);
+
+export const exportFile = createAsyncThunk(
+  "hostel/exportFile",
+  async (payload, { rejectWithValue }) => {
+    try {
+      await DOWNLOAD_FILE(HOSTELLER_GET_API, payload);
+    } catch (error) {
+      console.error("Error exportFile:", error);
+      return rejectWithValue(getErrorMessage(error, "Failed to export file"));
+    }
+  }
+);
+
+export const inactiveHosteller = createAsyncThunk(
+  "hostel/inactiveHosteller",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await POST(HOSTELLER_INACTIVE_API, payload);
+      return response?.data;
+    } catch (error) {
+      console.error("Error inactiveHosteller:", error);
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to inactive hosteller")
       );
     }
   }
@@ -76,6 +104,14 @@ const initialState = {
   grid: {
     loading: false,
     data: [],
+    error: null,
+  },
+  export: {
+    loading: false,
+    error: null,
+  },
+  inactive: {
+    loading: false,
     error: null,
   },
 };
@@ -127,6 +163,37 @@ const hostelSlice = createSlice({
       .addCase(getHostellers.rejected, (state, action) => {
         state.grid.loading = false;
         state.grid.error = action.payload;
+      })
+      
+      /* -------------------------------------------------------
+       exportFile
+      ------------------------------------------------------- */
+      .addCase(exportFile.pending, (state) => {
+        state.export.loading = true;
+        state.export.error = null;
+      })
+      .addCase(exportFile.fulfilled, (state) => {
+        state.export.loading = false;
+      })
+      .addCase(exportFile.rejected, (state, action) => {
+        state.export.loading = false;
+        state.export.error = action.payload;
+      })
+      
+      /* -------------------------------------------------------
+       inactiveHosteller
+      ------------------------------------------------------- */ 
+      .addCase(inactiveHosteller.pending, (state) => {
+        state.inactive.loading = true;
+        state.inactive.error = null;
+      })
+      .addCase(inactiveHosteller.fulfilled, (state, action) => {
+        state.inactive.loading = false;
+        state.inactive.data = action.payload;
+      })
+      .addCase(inactiveHosteller.rejected, (state, action) => {
+        state.inactive.loading = false;
+        state.inactive.error = action.payload;
       });
   },
 });

@@ -50,7 +50,7 @@ const IdleLogout = () => {
   ===================== */
   const idleTimerConfig = useMemo(
     () => ({
-      timeout: 1000 * 60 * 2, // 2 minutes
+      timeout: 1000 * 60 * 5, // 5 minutes
       promptBeforeIdle: 1000 * 60 * 1, // 1 minute
       onPrompt: handlePrompt,
       onIdle: handleIdle,

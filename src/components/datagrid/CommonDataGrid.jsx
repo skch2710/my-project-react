@@ -3,6 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Box, Paper, Toolbar, Tooltip, Typography } from "@mui/material";
 import { RiFileExcel2Fill } from "react-icons/ri";
 import { FaRegFilePdf } from "react-icons/fa";
+import FolderZipIcon from '@mui/icons-material/FolderZip';
 import Button from "../button/Button";
 
 const CommonDataGrid = ({
@@ -26,6 +27,7 @@ const CommonDataGrid = ({
   exportProp = {
     handleExcelExport,
     handlePdfExport,
+    handleZipExport,
     exportDisabled: false,
   },
   sx = {},
@@ -61,7 +63,7 @@ const CommonDataGrid = ({
               />
             </span>
           </Tooltip>
-          {exportProp.handlePdfExport && (
+          {exportProp?.handlePdfExport && (
             <Tooltip title="Export to Pdf">
               <span>
                 <Button
@@ -72,6 +74,21 @@ const CommonDataGrid = ({
                   width="60px"
                   disabled={exportProp.exportDisabled}
                   icon="red"
+                />
+              </span>
+            </Tooltip>
+          )}
+          {exportProp?.handleZipExport && (
+            <Tooltip title="Export to Zip">
+              <span>
+                <Button
+                  variant="outlined"
+                  startIcon={<FolderZipIcon size={16} />}
+                  onClick={exportProp.handleZipExport}
+                  label="Zip"
+                  width="60px"
+                  disabled={exportProp.exportDisabled}
+                  icon="#FFD966"
                 />
               </span>
             </Tooltip>
