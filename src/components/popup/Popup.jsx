@@ -21,6 +21,7 @@ const Popup = (props) => {
     submitButtonProps = {},
     cancelButtonProps = {},
     isSubmitting = false,
+    isView = false,
   } = props;
 
   return (
@@ -47,18 +48,20 @@ const Popup = (props) => {
       </DialogContent>
       <Divider />
       <DialogActions>
-        <Button
-          type="submit"
-          label="Save"
-          onClick={onSubmit}
-          color="success"
-          loading={isSubmitting}
-          disabled={isSubmitting}
-          {...submitButtonProps}
-        />
+        {!isView && (
+          <Button
+            type="submit"
+            label="Save"
+            onClick={onSubmit}
+            color="success"
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            {...submitButtonProps}
+          />
+        )}
         <Button
           variant="outlined"
-          label="Cancel"
+          label={isView ? "Close" : "Cancel"}
           onClick={handleClose}
           disabled={isSubmitting}
           {...cancelButtonProps}

@@ -6,7 +6,7 @@ import FormicField from "../../components/fields/FormicField";
 import FormicDatePicker from "../../components/fields/FormicDatePicker";
 import Dropdown from "../../components/dropdown/Dropdown";
 
-const HostelForm = ({ onSubmit, formikRef, formData }) => {
+const HostelForm = ({ onSubmit, formikRef, formData, isView = false }) => {
   return (
     <Formik
       innerRef={formikRef}
@@ -28,6 +28,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   placeholder="Enter Full Name"
                   required
                   maxLength={200}
+                  disabled={isView}
                 />
               </Grid>
 
@@ -39,6 +40,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   placeholder="Enter Email ID"
                   required
                   maxLength={150}
+                  disabled={isView}
                 />
               </Grid>
 
@@ -50,6 +52,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   placeholder="Enter Phone Number"
                   required
                   maxLength={10}
+                  disabled={isView}
                 />
               </Grid>
 
@@ -61,6 +64,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   placeholder="Enter address"
                   required
                   maxLength={250}
+                  disabled={isView}
                 />
               </Grid>
             </Grid>
@@ -72,6 +76,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   name="dob"
                   label="Date of Birth"
                   required={true}
+                  disabled={isView}
                 />
               </Grid>
 
@@ -82,6 +87,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   label="Hostel Fee"
                   placeholder="Enter Hostel Fee"
                   maxLength={15}
+                  disabled={isView}
                 />
               </Grid>
 
@@ -90,6 +96,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   name="joiningDate"
                   label="Joining Date"
                   required={true}
+                  disabled={isView}
                 />
               </Grid>
 
@@ -100,6 +107,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   label="Reason for Joining"
                   placeholder="Enter Reason for Joining"
                   maxLength={15}
+                  disabled={isView}
                 />
               </Grid>
             </Grid>
@@ -114,6 +122,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                   placeholder="Enter proof of address"
                   required
                   maxLength={50}
+                  disabled={isView}
                 />
               </Grid>
               <Grid size={2}>
@@ -129,6 +138,7 @@ const HostelForm = ({ onSubmit, formikRef, formData }) => {
                     setFieldValue("roomType", value ? value.roomType : "");
                     setFieldValue("roomTypeId",value ? value.roomTypeId : null);
                   }}
+                  disabled={isView}
                 />
               </Grid>
             </Grid>

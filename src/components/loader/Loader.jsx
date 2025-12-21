@@ -2,6 +2,7 @@
 import { CircularProgress, Box } from "@mui/material";
 
 const Loader = () => {
+  console.log("Loader rendered");
   return (
     <Box
       sx={{

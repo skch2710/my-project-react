@@ -41,6 +41,7 @@ export const validationSchema = Yup.object({
 export const GRID_TITLE = "Hosteller List";
 export const ADD_POPUP_TITLE = "Add Hosteller";
 export const EDIT_POPUP_TITLE = "Edit Hosteller";
+export const VIEW_POPUP_TITLE = "View Hosteller";
 const US_CURRENCY_FORMAT = '"$"#,##0.00_);$(#,##0.00)';
 
 export const revisedFields = [

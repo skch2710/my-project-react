@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import React, {
   useCallback,
   useEffect,
@@ -6,9 +6,17 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Popup from "../../components/popup/Popup";
-import HostelForm from "./HostelForm";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
+import Popup from "../../components/popup/Popup";
+import Loader from "../../components/loader/Loader";
+import CommonDataGrid from "../../components/datagrid/CommonDataGrid";
+
+import HostelForm from "./HostelForm";
+import HostelSearchForm from "./HostelSearchForm";
+import HostellerInactivePopup from "./HostellerInactivePopup";
+
 import useAccess, { ADD, EDIT, VIEW, DELETE } from "../../utils/constants";
 import {
   saveOrUpdateHosteller,
@@ -16,37 +24,34 @@ import {
   resetFormState,
   resetGridState,
   exportFile,
-  inactiveHosteller,
 } from "../../store/slices/hostelSlice";
-import { toast } from "react-toastify";
+
 import {
   initialValues,
   ADD_POPUP_TITLE,
   EDIT_POPUP_TITLE,
+  VIEW_POPUP_TITLE,
   GRID_TITLE,
   buildColumns,
   getDefaultSearchPayload,
 } from "./helper";
-import Loader from "../../components/loader/Loader";
-import CommonDataGrid from "../../components/datagrid/CommonDataGrid";
-import HostelSearchForm from "./HostelSearchForm";
-import PopupSmall from "../../components/popup/PopupSmall";
 
 const Hostel = () => {
   const [open, setOpen] = useState(false);
-  const [inactivePopupOpen, setInactivePopupOpen] = useState(false);
-  const [formValues, setFormValues] = useState(initialValues);
   const [popupTitle, setPopupTitle] = useState(ADD_POPUP_TITLE);
-  const formikRef = useRef();
+  const [formValues, setFormValues] = useState(initialValues);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 25,
   });
   const [searchValues, setSearchValues] = useState(getDefaultSearchPayload());
-  const [row, setRow] = useState(null);
+  const [inactivePopupOpen, setInactivePopupOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const formikRef = useRef();
+  const dispatch = useDispatch();
   const isWriteAccessForHostel = useAccess(5, "write");
 
-  const dispatch = useDispatch();
   const {
     form,
     grid,
@@ -56,54 +61,42 @@ const Hostel = () => {
 
   useEffect(() => {
     dispatch(resetGridState());
-  }, []);
+  }, [dispatch]);
 
-  const handlePopup = (type) => {
-    if (type && type === ADD) {
+  const handlePopup = useCallback((type) => {
+    if (type === ADD) {
       setPopupTitle(ADD_POPUP_TITLE);
       setFormValues(initialValues);
     }
-    setOpen(!open);
-  };
+    setOpen((prev) => !prev);
+  }, []);
 
-  const handleInactivePopup = () => {
-    setInactivePopupOpen(!inactivePopupOpen);
-  };
-
-  const handleAction = useCallback((action, row) => {
-    console.log("handleAction called:", action, row);
-
-    if (action && action === ADD) {
+  const handleGridAction = useCallback((action, row) => {
+    if (action === ADD) {
       setPopupTitle(ADD_POPUP_TITLE);
       setFormValues(initialValues);
-      handlePopup();
+      setOpen(true);
     } else if (action === EDIT) {
       setPopupTitle(EDIT_POPUP_TITLE);
       setFormValues({ ...initialValues, ...row });
-      handlePopup();
+      setOpen(true);
     } else if (action === VIEW) {
       console.log("View:", row);
+      setFormValues({ ...initialValues, ...row });
+      setPopupTitle(VIEW_POPUP_TITLE);
+      setOpen(true);
     } else if (action === DELETE) {
-      setRow(row);
-      handleInactivePopup();
+      setSelectedRow(row);
+      setInactivePopupOpen(true);
     }
   }, []);
 
-  const columns = useMemo(
-    () => buildColumns(handleAction, isWriteAccessForHostel),
-    [handleAction, isWriteAccessForHostel]
-  );
-
   const handleSubmit = async (values) => {
-    console.log("handleSubmit called with values:", values);
-    // toast.info("Submitting hosteller data...");
     try {
-      // Dispatch Redux thunk for API call
-      const result = await dispatch(saveOrUpdateHosteller(values)).unwrap();
+      await dispatch(saveOrUpdateHosteller(values)).unwrap();
       toast.success("Hosteller data saved successfully!");
-      console.log("API success:", result);
-    } catch (err) {
-      console.error("API error:", err);
+    } catch (error) {
+      console.error("Save failed:", error);
     } finally {
       setOpen(false);
       dispatch(resetFormState());
@@ -111,124 +104,62 @@ const Hostel = () => {
     }
   };
 
-  const handleClear = () => {
-    const cleared = getDefaultSearchPayload();
-    setSearchValues(cleared);
-  };
-
-  const handlePopupSubmit = () => {
-    if (formikRef.current) {
-      formikRef.current.handleSubmit();
-    }
-  };
-
   const handleSearch = async (values) => {
-    console.log("Search clicked", values);
     dispatch(resetGridState());
     setSearchValues(values);
     try {
-      const result = await dispatch(getHostellers(values)).unwrap();
-      toast.success("Hosteller data fetched successfully!");
-    } catch (err) {
-      console.error("API error:", err);
+      await dispatch(getHostellers(values)).unwrap();
+    } catch (error) {
+      console.error("Search failed:", error);
     }
   };
 
-  const handleInactive = async () => {
-    console.log("Inactivating hostellerId:", row.hostellerId);
-    try {
-      const result = await dispatch(
-        inactiveHosteller({
-          hostellerId: row.hostellerId,
-          emailId: row.emailId,
-        })
-      ).unwrap();
-      handleSearch(searchValues);
-      handleInactivePopup();
-      toast.success("Hosteller inactivated successfully!");
-    } catch (err) {
-      console.error("API error:", err);
-    }
-  };
-
-  const inactiveProps = useMemo(
-    () => ({
-      open: inactivePopupOpen,
-      handleClose: handleInactivePopup,
-      title: "Inactive Hosteller",
-      submitButtonProps: {
-        label: "Yes, Inactive",
-        onClick: handleInactive,
-        color: "success",
-      },
-      cancelButtonProps: {
-        label: "Cancel",
-        color: "error",
-        variant: "outlined",
-        onClick: handleInactivePopup,
-      },
-      children: (
-        <Box sx={{ pt: 1 }}>
-          <Typography>
-            inactivate <b>{row?.fullName}</b> hosteller?
-          </Typography>
-        </Box>
-      ),
-    }),
-    [inactivePopupOpen, handleInactivePopup, handleInactive, row]
-  );
+  const handleInactiveSuccess = useCallback(() => {
+    setInactivePopupOpen(false);
+    setSelectedRow(null);
+    handleSearch(searchValues);
+  }, [searchValues]);
 
   const handleExcelExport = async () => {
-    console.log("Custom Export to Excel");
-    const exportValues = { ...searchValues, exportExcel: true, fullLoad: true };
-    await dispatch(exportFile(exportValues));
+    await dispatch(
+      exportFile({ ...searchValues, exportExcel: true, fullLoad: true })
+    );
   };
 
   const handlePdfExport = async () => {
-    console.log("Custom Export to PDF");
-    const exportValues = { ...searchValues, exportPdf: true, fullLoad: true };
-    await dispatch(exportFile(exportValues));
+    await dispatch(
+      exportFile({ ...searchValues, exportPdf: true, fullLoad: true })
+    );
   };
 
   const handleZipExport = async () => {
-    console.log("Custom Export to ZIP");
-    const exportValues = { ...searchValues, exportZip: true, fullLoad: true };
-    await dispatch(exportFile(exportValues));
+    await dispatch(
+      exportFile({ ...searchValues, exportZip: true, fullLoad: true })
+    );
   };
+
+  const columns = useMemo(
+    () => buildColumns(handleGridAction, isWriteAccessForHostel),
+    [handleGridAction, isWriteAccessForHostel]
+  );
 
   return (
     <Grid container direction="column" spacing={2}>
-      <Grid>
-        <Typography variant="h6">Hostel Management</Typography>
-      </Grid>
-      <Grid>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 2,
-            position: "relative",
-            minHeight: 120,
-            overflow: "hidden",
-          }}
-        >
-          <Grid container spacing={2} flexDirection={"column"}>
-            <Grid>
-              <Typography variant="body1">Filters</Typography>
-            </Grid>
-            <Grid>
-              <HostelSearchForm
-                handlePopup={handlePopup}
-                handleSearch={handleSearch}
-                searchValues={searchValues}
-                handleClear={handleClear}
-                isWriteAccessForHostel={isWriteAccessForHostel}
-              />
-            </Grid>
-          </Grid>
-        </Paper>
-      </Grid>
+      <Typography variant="h6">Hostel Management</Typography>
 
-      {/* <Grid container> */}
+      {/* Filters */}
+      <Paper elevation={3} sx={{ p: 2 }}>
+        <Typography variant="body1">Filters</Typography>
+        <HostelSearchForm
+          handlePopup={handlePopup}
+          handleSearch={handleSearch}
+          handleClear={() => setSearchValues(getDefaultSearchPayload())}
+          searchValues={searchValues}
+          isWriteAccessForHostel={isWriteAccessForHostel}
+        />
+      </Paper>
+
+      {/* Grid */}
       <CommonDataGrid
         title={GRID_TITLE}
         columns={columns}
@@ -237,8 +168,6 @@ const Hostel = () => {
         totalRows={grid.data?.content?.length || 0}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        // checkboxSelection
-        // onSelectionChange={setSelectionModel}
         height={350}
         exportProp={{
           handleExcelExport,
@@ -247,25 +176,33 @@ const Hostel = () => {
           exportDisabled: !(grid.data?.content?.length > 0),
         }}
       />
-      {/* </Grid> */}
 
-      {/* Popup */}
+      {/* Add / Edit Popup */}
       <Popup
         open={open}
         handleClose={handlePopup}
         title={popupTitle}
-        onSubmit={handlePopupSubmit}
+        onSubmit={() => formikRef.current?.handleSubmit()}
         isSubmitting={form.loading}
+        isView={popupTitle === VIEW_POPUP_TITLE}
       >
         <HostelForm
           onSubmit={handleSubmit}
           formikRef={formikRef}
           formData={formValues}
+          isView={popupTitle === VIEW_POPUP_TITLE}
         />
         {form.loading && <Loader />}
       </Popup>
 
-      <PopupSmall {...inactiveProps} />
+      {/* Inactivate Popup */}
+      <HostellerInactivePopup
+        open={inactivePopupOpen}
+        row={selectedRow}
+        onClose={() => setInactivePopupOpen(false)}
+        onSuccess={handleInactiveSuccess}
+        loading={inactive.loading}
+      />
 
       {(grid.loading || inactive.loading || exportState.loading) && <Loader />}
     </Grid>
