@@ -189,7 +189,7 @@ const FileUploadPopup = (props) => {
               alignItems="center"
             >
               <Typography variant="body2" fontWeight={500}>
-                {file.name}
+                {file.name} ({(file.size / (1024 * 1024)).toFixed(3)} MB)
               </Typography>
               <IconButton
                 size="small"
