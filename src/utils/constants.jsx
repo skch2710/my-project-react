@@ -23,12 +23,20 @@ export const REGEX = {
 
 export const DATE_FORMAT = "DD-MM-YYYY";
 
+export const ALLOWED_UPLOAD_TYPES = [
+  "text/csv",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-excel",
+];
+
 // API URLS
 export const HOSTELLER_SAVE_OR_UPDATE_API =
   "/api/v1/hostel/save-update-hosteller";
 export const HOSTELLER_LIST_API = "/api/v1/hostel/get-hosteller-list";
 export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
 export const HOSTELLER_INACTIVE_API = "/api/v1/hostel/inactive-hosteller";
+export const HOSTELLER_TEMPLATE_API = "/api/v1/hostel/hostel-template";
+export const HOSTELLER_BULK_UPLOAD_API = "/api/v1/hostel/upload-file";
 
 export const LOGIN_API = "/authenticate/login";
 export const REFRESH_TOKEN_API = "/authenticate/refresh";

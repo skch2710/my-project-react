@@ -6,7 +6,7 @@ const Button = (props) => {
     label,
     onClick,
     variant = "contained",
-    color = "black",
+    color,
     size = "small",
     disabled,
     width = "100",

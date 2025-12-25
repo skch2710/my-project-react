@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { DOWNLOAD_FILE, POST } from "../../utils/axiosHelper";
+import { DOWNLOAD_FILE, POST, DOWNLOAD_FILE_GET } from "../../utils/axiosHelper";
 import {
   HOSTELLER_SAVE_OR_UPDATE_API,
   HOSTELLER_GET_API,
   HOSTELLER_INACTIVE_API,
+  HOSTELLER_TEMPLATE_API,
 } from "../../utils/constants";
 
 /* -------------------------------------------------------
@@ -77,6 +78,18 @@ export const exportFile = createAsyncThunk(
   }
 );
 
+export const downloadTemplate = createAsyncThunk(
+  "hostel/downloadTemplate",
+  async (payload, { rejectWithValue }) => {
+    try {
+      await DOWNLOAD_FILE_GET(HOSTELLER_TEMPLATE_API, payload);
+    } catch (error) {
+      console.error("Error downloadTemplate:", error);
+      return rejectWithValue(getErrorMessage(error, "Failed to download template"));
+    }
+  }
+);
+
 export const inactiveHosteller = createAsyncThunk(
   "hostel/inactiveHosteller",
   async (payload, { rejectWithValue }) => {
@@ -96,6 +109,8 @@ export const inactiveHosteller = createAsyncThunk(
   Initial State
 ------------------------------------------------------- */
 const initialState = {
+  loading: false,
+  error: null,
   form: {
     loading: false,
     data: null,
@@ -194,6 +209,18 @@ const hostelSlice = createSlice({
       .addCase(inactiveHosteller.rejected, (state, action) => {
         state.inactive.loading = false;
         state.inactive.error = action.payload;
+      })
+      
+      .addCase(downloadTemplate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(downloadTemplate.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(downloadTemplate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

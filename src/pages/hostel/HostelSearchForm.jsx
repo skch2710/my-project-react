@@ -4,6 +4,7 @@ import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRou
 import FormicField from "../../components/fields/FormicField";
 import Button from "../../components/button/Button";
 import { ADD } from "../../utils/constants";
+import HostelBulkUpload from "./HostelBulkUpload";
 
 const HostelSearchForm = (props) => {
   const {
@@ -55,6 +56,7 @@ const HostelSearchForm = (props) => {
                   onClick={() => handlePopup(ADD)}
                   disabled={!isWriteAccessForHostel}
                 />
+                <HostelBulkUpload />
                 <Button label="Search" color="primary" onClick={handleSubmit} />
                 <Button
                   label="Clear"
