@@ -34,21 +34,21 @@ export const API_SERVICE = "/apiService";
 
 // API URLS
 export const HOSTELLER_SAVE_OR_UPDATE_API =
-  API_SERVICE + "/api/v1/hostel/save-update-hosteller";
+  "/api/v1/hostel/save-update-hosteller";
 export const HOSTELLER_LIST_API =
-  API_SERVICE + "/api/v1/hostel/get-hosteller-list";
-export const HOSTELLER_GET_API = API_SERVICE + "/api/v1/hostel/get-hostellers";
+  "/api/v1/hostel/get-hosteller-list";
+export const HOSTELLER_GET_API = "/api/v1/hostel/get-hostellers";
 export const HOSTELLER_INACTIVE_API =
-  API_SERVICE + "/api/v1/hostel/inactive-hosteller";
+  "/api/v1/hostel/inactive-hosteller";
 export const HOSTELLER_TEMPLATE_API =
-  API_SERVICE + "/api/v1/hostel/hostel-template";
+  "/api/v1/hostel/hostel-template";
 export const HOSTELLER_BULK_UPLOAD_API =
-  API_SERVICE + "/api/v1/hostel/upload-file";
-export const LOGIN_API = API_SERVICE + "/authenticate/login";
-export const REFRESH_TOKEN_API = API_SERVICE + "/authenticate/refresh";
-export const LOGOUT_API = API_SERVICE + "/authenticate/logout";
+  "/api/v1/hostel/upload-file";
+export const LOGIN_API = "/authenticate/login";
+export const REFRESH_TOKEN_API = "/authenticate/refresh";
+export const LOGOUT_API = "/authenticate/logout";
 
-export const USER_PROFILE_API = API_SERVICE + "/api/v1/user/profile";
+export const USER_PROFILE_API = "/api/v1/user/profile";
 
 export const ADD = "Add";
 export const EDIT = "Edit";

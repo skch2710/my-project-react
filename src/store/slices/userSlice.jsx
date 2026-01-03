@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { POST } from "../../utils/axiosHelper";
+import { GET } from "../../utils/axiosHelper";
 import { USER_PROFILE_API } from "../../utils/constants";
 import { logoutUser } from "./authSlice";
 
@@ -18,12 +18,14 @@ const initialState = {
 /* ================== PROFILE ================== */
 export const profile = createAsyncThunk(
   "user/profile",
-  async (payload, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await POST(USER_PROFILE_API, payload);
+      const response = await GET(USER_PROFILE_API);
+
       if (response.statusCode === 200) {
-        return response.data;
+        return response.data; // { user, navigations }
       }
+
       return rejectWithValue(response.errorMessage);
     } catch (err) {
       return rejectWithValue(err.message);
@@ -41,20 +43,23 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(profile.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.profile.loading = true;
+        state.profile.error = null;
       })
       .addCase(profile.fulfilled, (state, action) => {
         const { user, navigations } = action.payload || {};
+
         state.user = user ?? null;
         state.userPrivileges = user?.userPrivilege ?? [];
         state.navigations = navigations ?? [];
         state.profileLoaded = true;
-        state.loading = false;
+
+        state.profile.loading = false;
+        state.profile.error = null;
       })
       .addCase(profile.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        state.profile.loading = false;
+        state.profile.error = action.payload;
       })
       .addCase(logoutUser.fulfilled, () => initialState);
   },
@@ -72,6 +77,5 @@ export const selectNavigations = (state) => state.user.navigations;
 export const selectUserPrivileges = (state) => state.user.userPrivileges;
 export const selectProfileLoaded = (state) => state.user.profileLoaded;
 
-/* ================== EXPORTS ================== */
-export const { clearUser } = userSlice.actions;
+/* ================== EXPORT ================== */
 export default userSlice.reducer;

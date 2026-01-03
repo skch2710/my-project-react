@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
-import { Alert, FormLabel, Grid, Typography } from "@mui/material";
+import { Alert, Divider, FormLabel, Grid, Typography } from "@mui/material";
 import MailLockOutlinedIcon from "@mui/icons-material/MailLockOutlined";
 import LockOutlineIcon from "@mui/icons-material/LockOutline";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,8 +72,7 @@ const LoginForm = () => {
         password: encryptedPassword,
       };
 
-      await dispatch(loginUser(payload))
-        .unwrap();
+      await dispatch(loginUser(payload)).unwrap();
       toast.success("Login successful!");
 
       if (rememberMe) {
@@ -150,6 +149,21 @@ const LoginForm = () => {
                 onClick={handleSubmit}
                 loading={loginLoading}
                 disabled={loginLoading}
+              />
+            </Grid>
+
+            <Divider>(OR)</Divider>
+
+            <Grid size={7} container>
+              <Button
+                color="secondary"
+                label="Login With Auth SSO"
+                onClick={() => {
+                  window.location.href =
+                    "http://localhost:8062/authenticate/login";
+                }}
+                // loading={loginLoading}
+                // disabled={loginLoading}
               />
             </Grid>
           </Grid>

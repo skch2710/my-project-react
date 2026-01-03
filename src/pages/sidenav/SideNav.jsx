@@ -84,7 +84,6 @@ export default function SideNav() {
   const userName = useSelector(selectUserName);
   const profileLoaded = useSelector(selectProfileLoaded);
   const loading = useSelector((s) => s.user.profile.loading);
-  const emailId = useSelector((s) => s.auth.emailId);
 
   const [open, setOpen] = useState(true);
   const [navigation, setNavigation] = useState([]);
@@ -92,15 +91,14 @@ export default function SideNav() {
 
   /* ================== LOAD PROFILE ================== */
   useEffect(() => {
-    if (!emailId || profileLoaded || loading) return;
-
-    dispatch(profile({ emailId }))
+    if (profileLoaded || loading) return;
+    dispatch(profile())
       .unwrap()
       .catch(() => {
         dispatch(logoutUser());
         navigate("/login", { replace: true });
       });
-  }, [dispatch, emailId, profileLoaded, loading, navigate]);
+  }, [dispatch, profileLoaded, loading, navigate]);
 
   /* ================== BUILD NAV ================== */
   useEffect(() => {

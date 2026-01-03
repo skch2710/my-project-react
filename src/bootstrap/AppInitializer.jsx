@@ -7,7 +7,6 @@ const AppInitializer = ({ children }) => {
   const dispatch = useDispatch();
 
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
-  const emailId = useSelector((s) => s.auth.emailId);
 
   const profileLoaded = useSelector((s) => s.user.profileLoaded);
   const loading = useSelector((s) => s.user.profile.loading);
@@ -15,10 +14,10 @@ const AppInitializer = ({ children }) => {
 
   // Load profile once
   useEffect(() => {
-    if (isAuthenticated && !profileLoaded && !loading && emailId) {
-      dispatch(profile({ emailId }));
+    if (isAuthenticated && !profileLoaded && !loading) {
+      dispatch(profile());
     }
-  }, [isAuthenticated, profileLoaded, loading, emailId, dispatch]);
+  }, [isAuthenticated, profileLoaded, loading, dispatch]);
 
   // Block app until profile ready
   if (isAuthenticated && (!profileLoaded || loading)) {
@@ -31,7 +30,7 @@ const AppInitializer = ({ children }) => {
       <div style={{ padding: 24, textAlign: "center" }}>
         <h3>Unable to load profile</h3>
         <p>{error}</p>
-        <button onClick={() => dispatch(profile({ emailId }))}>Retry</button>
+        <button onClick={() => dispatch(profile())}>Retry</button>
       </div>
     );
   }

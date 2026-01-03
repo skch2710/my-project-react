@@ -5,7 +5,6 @@ import { LOGIN_API, LOGOUT_API } from "../../utils/constants";
 /* ================== STATE ================== */
 const initialState = {
   isAuthenticated: false,
-  emailId: null,
   login: {
     loading: false,
     error: null,
@@ -18,13 +17,10 @@ export const loginUser = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       payload.requestVerifyToken = import.meta.env.VITE_REQUEST_VERIFY_TOKEN;
-
       const response = await POST(LOGIN_API, payload);
-
       if (response.statusCode === 200) {
-        return { emailId: payload.emailId };
+        return response.data;
       }
-
       return rejectWithValue(response?.errorMessage);
     } catch (err) {
       return rejectWithValue(err.message);
@@ -46,6 +42,9 @@ const authSlice = createSlice({
     resetLoginState(state) {
       state.login = { loading: false, error: null };
     },
+    setAuthenticated(state, action) {
+      state.isAuthenticated = true;
+    },
   },
 
   extraReducers: (builder) => {
@@ -57,7 +56,6 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.login.loading = false;
         state.isAuthenticated = true;
-        state.emailId = action.payload.emailId;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.login.loading = false;
@@ -74,5 +72,5 @@ export const selectLoginLoading = (state) => state.auth.login.loading;
 export const selectLoginError = (state) => state.auth.login.error;
 
 /* ================== EXPORTS ================== */
-export const { resetLoginState } = authSlice.actions;
+export const { resetLoginState, setAuthenticated } = authSlice.actions;
 export default authSlice.reducer;

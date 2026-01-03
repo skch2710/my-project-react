@@ -9,6 +9,7 @@ import NotFound from "./pages/notfound/NotFound";
 import IdleLogout from "./components/idleLogout/IdleLogout";
 import AppInitializer from "./bootstrap/AppInitializer";
 import { getRoutesFromNavigation } from "./pages/sidenav/helper";
+import SSOPage from "./pages/login/SSOPage";
 
 const App = () => {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
@@ -31,6 +32,8 @@ const App = () => {
               isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
             }
           />
+
+          <Route path="/sso-page" element={<SSOPage />} />
 
           {/* PROTECTED */}
           <Route element={<PrivateRoute />}>
