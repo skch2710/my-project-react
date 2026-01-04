@@ -45,6 +45,7 @@ export const HOSTELLER_TEMPLATE_API =
 export const HOSTELLER_BULK_UPLOAD_API =
   "/api/v1/hostel/upload-file";
 export const LOGIN_API = "/authenticate/login";
+export const SSO_LOGIN_API = "/authenticate/sso-login";
 export const REFRESH_TOKEN_API = "/authenticate/refresh";
 export const LOGOUT_API = "/authenticate/logout";
 

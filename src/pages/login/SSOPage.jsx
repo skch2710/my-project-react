@@ -11,10 +11,7 @@ const SSOPage = () => {
     dispatch(profile())
       .unwrap()
       .then(() => {
-        // 1️⃣ mark authenticated
         dispatch(setAuthenticated());
-
-        // 2️⃣ IMPORTANT: redirect
         window.location.replace("/");
       })
       .catch(() => {

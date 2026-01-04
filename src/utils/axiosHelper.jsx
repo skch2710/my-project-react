@@ -28,7 +28,6 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
@@ -39,12 +38,10 @@ api.interceptors.response.use(
           failedQueue.push({ resolve, reject });
         }).then(() => api(originalRequest));
       }
-
       originalRequest._retry = true;
       isRefreshing = true;
-
       try {
-        await api.post(REFRESH_TOKEN_API);
+        await api.post(REFRESH_TOKEN_API,{ssoLogin: false});
         processQueue(null);
         return api(originalRequest);
       } catch (err) {

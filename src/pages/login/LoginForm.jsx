@@ -19,8 +19,8 @@ import {
   selectLoginError,
   selectLoginLoading,
 } from "../../store/slices/authSlice";
-import { profile } from "../../store/slices/userSlice";
 import { clearSessionExpired } from "../../store/slices/sessionSlice";
+import { SSO_LOGIN_API } from "../../utils/constants";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -32,6 +32,7 @@ const LoginForm = () => {
 
   const [rememberMe, setRememberMe] = useState(false);
   const [initialValues, setInitialValues] = useState(loginForm);
+  const ssoUrl = import.meta.env.VITE_API_URL + SSO_LOGIN_API;
 
   /* ================== LOAD REMEMBER ME ================== */
   useEffect(() => {
@@ -159,8 +160,7 @@ const LoginForm = () => {
                 color="secondary"
                 label="Login With Auth SSO"
                 onClick={() => {
-                  window.location.href =
-                    "http://localhost:8062/authenticate/login";
+                  window.location.href = ssoUrl;
                 }}
                 // loading={loginLoading}
                 // disabled={loginLoading}

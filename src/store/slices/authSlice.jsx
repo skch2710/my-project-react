@@ -5,6 +5,7 @@ import { LOGIN_API, LOGOUT_API } from "../../utils/constants";
 /* ================== STATE ================== */
 const initialState = {
   isAuthenticated: false,
+  isSSOAuthenticated: false,
   login: {
     loading: false,
     error: null,
@@ -44,6 +45,7 @@ const authSlice = createSlice({
     },
     setAuthenticated(state, action) {
       state.isAuthenticated = true;
+      state.isSSOAuthenticated = true;
     },
   },
 
