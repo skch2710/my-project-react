@@ -41,7 +41,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
       try {
-        await api.post(REFRESH_TOKEN_API,{ssoLogin: false});
+        await api.post(REFRESH_TOKEN_API);
         processQueue(null);
         return api(originalRequest);
       } catch (err) {
