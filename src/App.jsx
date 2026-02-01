@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 
-import LoginPage from "./pages/login/LoginPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import SideNav from "./pages/sidenav/SideNav";
 import NotFound from "./pages/notfound/NotFound";
@@ -10,6 +9,7 @@ import IdleLogout from "./components/idleLogout/IdleLogout";
 import AppInitializer from "./bootstrap/AppInitializer";
 import { getRoutesFromNavigation } from "./pages/sidenav/helper";
 import SSOPage from "./pages/login/SSOPage";
+import LoginPage from "./pages/login/LoginPage";
 
 const App = () => {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);

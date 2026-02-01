@@ -1,63 +1,110 @@
-import { Grid, Box, Divider, Paper, Alert } from "@mui/material";
+import { Box, Card, Typography, Divider } from "@mui/material";
+import Grid from "@mui/material/Grid";
+
 import LoginForm from "./LoginForm";
 import logo from "../../assets/logo.png";
-import { useDispatch, useSelector } from "react-redux";
 import { copyRightMessage } from "./helper";
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
-  const { login } = useSelector((state) => state.user);
   return (
-    <Grid
-      container
-      direction="column"
-      justifyContent="space-between"
-      sx={{ minHeight: "100vh", backgroundColor: "#f3f6f6ff" }}
+    <Box
+      sx={{
+        minHeight: { xs: "auto", md: "100vh" },
+        bgcolor: "#f3f6f6ff",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      {/* Main content */}
-      <Grid>
-        <Grid container spacing={3}>
-          <Grid
-            container
-            size={6}
+      {/* Main Content */}
+      <Grid
+        container
+        spacing={{ xs: 2, md: 4 }}
+        sx={{
+          flex: { xs: "unset", md: 1 },
+          justifyContent: "center",
+          alignItems: { xs: "flex-start", md: "center" },
+          px: { xs: 2, md: 6 },
+          py: { xs: 2, md: 2 }, // ✅ reduce to avoid scroll
+        }}
+      >
+        {/* Desktop Logo */}
+        <Grid
+          size={{ xs: 12, md: 6 }}
+          sx={{
+            display: { xs: "none", md: "flex" },
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            component="img"
+            src={logo}
+            alt="Logo"
             sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              // border: 1,
-              // borderColor: "red",
+              width: 600,
+              maxWidth: "100%",
+              height: "auto",
+            }}
+          />
+        </Grid>
+
+        {/* Login Card */}
+        <Grid
+          size={{ xs: 12, md: 6 }}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Card
+            sx={{
+              width: "100%",
+              maxWidth: { xs: 380, sm: 420, md: 460 },
+              p: { xs: 2.5, sm: 3, md: 3 }, // ✅ reduced padding
+              borderRadius: 5,
+              boxShadow: "0px 20px 50px rgba(0,0,0,0.12)",
+              mt: { xs: 1, md: 0 },
             }}
           >
-            <img
-              src={logo}
-              alt="Logo"
-              style={{
-                width: 600,
-                height: "auto",
+            {/* Mobile Logo inside card */}
+            <Box
+              sx={{
+                display: { xs: "flex", md: "none" },
+                justifyContent: "center",
+                mb: 1.5,
               }}
-            />
-          </Grid>
+            >
+              <Box
+                component="img"
+                src={logo}
+                alt="Logo"
+                sx={{
+                  width: { xs: 160, sm: 200 },
+                  height: "auto",
+                  objectFit: "contain",
+                }}
+              />
+            </Box>
 
-          <Grid
-            size={5}
-            sx={{ /*border: 1, borderColor: "red",*/ marginTop: 8 }}
-          >
-            <Paper elevation={3} sx={{ padding: 4 }}>
-              <LoginForm />
-            </Paper>
-          </Grid>
+            <LoginForm />
+          </Card>
         </Grid>
       </Grid>
 
       {/* Footer */}
-      <Grid>
-        <Box textAlign="center" p={2}>
-          <Divider />
-          <Box mt={2} fontSize={14} color="gray">
-            {copyRightMessage}
-          </Box>
-        </Box>
-      </Grid>
-    </Grid>
+      <Box
+        sx={{
+          mt: { xs: 2, md: "auto" },
+          textAlign: "center",
+          py: 1.5,
+        }}
+      >
+        <Divider sx={{ mb: 1 }} />
+        <Typography variant="body2" color="text.secondary">
+          {copyRightMessage}
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

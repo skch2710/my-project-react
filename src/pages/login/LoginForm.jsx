@@ -1,15 +1,31 @@
 import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
-import { Alert, Divider, FormLabel, Grid, Typography } from "@mui/material";
-import MailLockOutlinedIcon from "@mui/icons-material/MailLockOutlined";
-import LockOutlineIcon from "@mui/icons-material/LockOutline";
+import {
+  Alert,
+  Box,
+  Button,
+  Divider,
+  FormLabel,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+
+import MuiCheckbox from "../../components/checkbox/MuiCheckbox";
+
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
+
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
-import FormicField from "../../components/fields/FormicField";
-import Button from "../../components/button/Button";
-import MuiCheckbox from "../../components/checkbox/MuiCheckbox";
 import { loginForm, validationSchema } from "./helper";
 import { encrypt, decrypt } from "../../utils/aesHelper";
 
@@ -24,7 +40,6 @@ import { SSO_LOGIN_API } from "../../utils/constants";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const loginError = useSelector(selectLoginError);
   const loginLoading = useSelector(selectLoginLoading);
@@ -32,6 +47,9 @@ const LoginForm = () => {
 
   const [rememberMe, setRememberMe] = useState(false);
   const [initialValues, setInitialValues] = useState(loginForm);
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const ssoUrl = import.meta.env.VITE_API_URL + SSO_LOGIN_API;
 
   /* ================== LOAD REMEMBER ME ================== */
@@ -62,7 +80,7 @@ const LoginForm = () => {
   }, [dispatch]);
 
   /* ================== SUBMIT ================== */
-  const handleSubmit = async (values) => {
+  const handleLogin = async (values) => {
     try {
       dispatch(clearSessionExpired());
 
@@ -96,77 +114,210 @@ const LoginForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={handleLogin}
       enableReinitialize
     >
-      {({ handleSubmit }) => (
-        <Form id="loginForm">
-          <Grid container spacing={2} flexDirection="column">
-            {loginError && <Alert severity="error">{loginError}</Alert>}
-            {sessionExpired && (
-              <Alert severity="error">
-                Your session expired due to inactivity.
-              </Alert>
-            )}
+      {({ values, handleChange, handleBlur, touched, errors }) => (
+        <Form>
+          {/* Header */}
+          <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5 }}>
+            Sign in
+          </Typography>
 
-            <Typography variant="h5" mb={2}>
-              Login to Your Account
+          <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+            New user?{" "}
+            <Link href="#" underline="hover" fontWeight={600}>
+              Create an account
+            </Link>
+          </Typography>
+
+          {/* Errors */}
+          {loginError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {loginError}
+            </Alert>
+          )}
+
+          {sessionExpired && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              Your session expired due to inactivity.
+            </Alert>
+          )}
+
+          {/* Email */}
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" fontWeight={600} sx={{ mb: 0.5 }}>
+              Email Address <span style={{ color: "red" }}>*</span>
             </Typography>
 
-            <Grid size={6}>
-              <FormicField
-                startIcon={<MailLockOutlinedIcon fontSize="small" />}
-                type="email"
-                name="emailId"
-                label="Email ID"
-                placeholder="Enter Email ID"
-                required
-              />
-            </Grid>
+            <TextField
+              fullWidth
+              name="emailId"
+              placeholder="Enter Email ID"
+              value={values.emailId}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.emailId && Boolean(errors.emailId)}
+              helperText={touched.emailId && errors.emailId}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailOutlinedIcon color="action" />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          </Box>
 
-            <Grid size={6}>
-              <FormicField
-                startIcon={<LockOutlineIcon fontSize="small" />}
-                type="password"
-                name="password"
-                label="Password"
-                placeholder="Enter Password"
-                required
-              />
-            </Grid>
+          {/* Password */}
+          <Box sx={{ mb: 1 }}>
+            <Typography variant="body2" fontWeight={600} sx={{ mb: 0.5 }}>
+              Password <span style={{ color: "red" }}>*</span>
+            </Typography>
 
-            <Grid size={6}>
+            <TextField
+              fullWidth
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter Password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.password && Boolean(errors.password)}
+              helperText={touched.password && errors.password}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        edge="end"
+                        onClick={() => setShowPassword((v) => !v)}
+                      >
+                        {showPassword ? (
+                          <VisibilityOffOutlinedIcon color="action" />
+                        ) : (
+                          <VisibilityOutlinedIcon color="action" />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          </Box>
+
+          {/* Remember + Forgot */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 2,
+            }}
+          >
+            {/* Left */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <MuiCheckbox
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
-              <FormLabel>Remember Me</FormLabel>
-            </Grid>
+              <FormLabel sx={{ fontSize: 16, cursor: "pointer" }}>
+                Remember Me
+              </FormLabel>
+            </Box>
 
-            <Grid size={7} justifyContent="flex-end" container>
-              <Button
-                color="primary"
-                label="Login"
-                onClick={handleSubmit}
-                loading={loginLoading}
-                disabled={loginLoading}
-              />
-            </Grid>
+            {/* Right */}
+            <Link href="#" underline="hover" fontSize={14} fontWeight={600}>
+              Forgot password?
+            </Link>
+          </Box>
 
-            <Divider>(OR)</Divider>
+          {/* Login Button - BLACK */}
+          <Button
+            type="submit"
+            fullWidth
+            disabled={loginLoading}
+            variant="contained"
+            sx={{
+              py: 1.3,
+              borderRadius: 999,
+              fontWeight: 700,
+              fontSize: 16,
+              bgcolor: "#111",
+              "&:hover": { bgcolor: "#000" },
+              mb: 2,
+            }}
+          >
+            {loginLoading ? "Logging in..." : "LOGIN"}
+          </Button>
 
-            <Grid size={7} container>
-              <Button
-                color="secondary"
-                label="Login With Auth SSO"
-                onClick={() => {
-                  window.location.href = ssoUrl;
-                }}
-                // loading={loginLoading}
-                // disabled={loginLoading}
-              />
-            </Grid>
-          </Grid>
+          {/* Divider OR */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <Divider sx={{ flex: 1 }} />
+            <Typography variant="body2" color="text.secondary">
+              or
+            </Typography>
+            <Divider sx={{ flex: 1 }} />
+          </Box>
+
+          {/* Social header */}
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: "center", mb: 1.5 }}
+          >
+            Join With Your Favourite Social Media Account
+          </Typography>
+
+          {/* Social icons */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 2,
+              mb: 1, // ✅ reduced (no empty space)
+            }}
+          >
+            <IconButton
+              onClick={() => {
+                window.location.href = ssoUrl;
+              }}
+              sx={{
+                width: 40,
+                height: 40,
+                border: "1px solid #e5e7eb",
+              }}
+            >
+              S
+            </IconButton>
+
+            <IconButton
+              sx={{
+                width: 40,
+                height: 40,
+                border: "1px solid #e5e7eb",
+              }}
+            >
+              <GoogleIcon />
+            </IconButton>
+
+            <IconButton
+              sx={{
+                width: 40,
+                height: 40,
+                border: "1px solid #e5e7eb",
+              }}
+            >
+              <FacebookIcon />
+            </IconButton>
+          </Box>
         </Form>
       )}
     </Formik>
