@@ -26,14 +26,23 @@ export const loginUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.message);
     }
-  }
+  },
 );
 
 /* ================== LOGOUT ================== */
-export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
-  await POST(LOGOUT_API);
-  return true;
-});
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      await POST(LOGOUT_API);
+    } catch (err) {
+      console.error("Logout failed:", err);
+      return rejectWithValue(err);
+    } finally {
+      window.location.replace("/login"); // always redirect
+    }
+  },
+);
 
 /* ================== SLICE ================== */
 const authSlice = createSlice({
@@ -64,8 +73,14 @@ const authSlice = createSlice({
         state.login.error = action.payload;
         state.isAuthenticated = false;
       })
-      .addCase(logoutUser.fulfilled, () => initialState);
+      .addCase(logoutUser.fulfilled, (state) => {
+        Object.assign(state, initialState);
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        Object.assign(state, initialState);
+      });
   },
+
 });
 
 /* ================== SELECTORS ================== */

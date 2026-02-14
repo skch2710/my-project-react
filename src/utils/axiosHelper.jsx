@@ -60,11 +60,24 @@ api.interceptors.response.use(
 /* ======================
    API HELPERS
 ====================== */
-export const GET = (url, params = {}) =>
-  api.get(url, { params }).then((res) => res.data);
+export const GET = async (url, params = {}) =>{
+  try{
+    const response = await api.get(url, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+  
 
-export const POST = async (url, payload) =>
-  await api.post(url, payload).then((res) => res.data);
+export const POST = async (url, payload) =>{
+  try {
+    const response = await api.post(url, payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const DOWNLOAD_FILE = async (url, payload) => {
   try {
