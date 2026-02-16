@@ -1,13 +1,15 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/button/Button";
 import { Grid, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectUserName } from "../../store/slices/userSlice";
+import Timer from "../../components/timer/Timer";
+import { useState } from "react";
 
 const Home = () => {
   const navigate = useNavigate();
   const userName = useSelector(selectUserName);
+  const [expired, setExpired] = useState(false);
+  const [restartKey, setRestartKey] = useState(0);
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
@@ -16,6 +18,30 @@ const Home = () => {
         variant="subtitle1"
         color="blue"
       >{`Welcome, ${userName}!`}</Typography>
+
+      {expired ? (
+        <Typography variant="body1" color="red">
+          Timer has expired. Please request a new one.
+        </Typography>
+      ) : null}
+
+      <Timer
+        minutes={2}
+        restartKey={restartKey}
+        onExpire={() => {
+          console.log("OTP expired");
+          setExpired(true);
+        }}
+      />
+
+      <button
+        onClick={() => {
+          setExpired(false);
+          setRestartKey((k) => k + 1);
+        }}
+      >
+        Resend OTP
+      </button>
     </Grid>
   );
 };
