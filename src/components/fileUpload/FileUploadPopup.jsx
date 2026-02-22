@@ -107,7 +107,7 @@ const FileUploadPopup = (props) => {
       submitButtonProps={{
         label: uploading ? "Uploading..." : "Upload",
         onClick: () => handleUpload(file, false),
-        disabled: !file || uploading,
+        disabled: !file || uploading || !!error,
       }}
       cancelButtonProps={{
         label: "Close",
