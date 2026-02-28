@@ -38,8 +38,6 @@ export const logoutUser = createAsyncThunk(
     } catch (err) {
       console.error("Logout failed:", err);
       return rejectWithValue(err);
-    } finally {
-      window.location.replace("/login"); // always redirect
     }
   },
 );

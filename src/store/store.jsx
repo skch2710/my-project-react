@@ -9,7 +9,9 @@ import authReducer from "./slices/authSlice";
 import userReducer from "./slices/userSlice";
 import sessionReducer from "./slices/sessionSlice";
 
-/* ================== ROOT REDUCER ================== */
+import { setupAxiosInterceptors } from "../utils/axiosClient";
+
+/* ROOT REDUCER */
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
@@ -18,7 +20,6 @@ const rootReducer = combineReducers({
   hostel: hostelReducer,
 });
 
-/* ================== PERSIST CONFIG ================== */
 const persistConfig = {
   key: "root",
   storage,
@@ -26,10 +27,9 @@ const persistConfig = {
   transforms: [encryptor],
 };
 
-/* ================== PERSISTED REDUCER ================== */
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-/* ================== STORE ================== */
+/* STORE */
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -40,6 +40,8 @@ const store = configureStore({
     }),
 });
 
-/* ================== EXPORTS ================== */
+// 🔥 Inject store into Axios AFTER creation
+setupAxiosInterceptors(store);
+
 export const persistor = persistStore(store);
 export default store;
