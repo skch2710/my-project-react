@@ -16,6 +16,7 @@ export const refreshApi = axios.create({
 
 export const setupAxiosInterceptors = (store) => {
   let logoutInFlight = null;
+  let refreshInFlight = null;
 
   const performLogout = async () => {
     if (logoutInFlight) {
@@ -43,10 +44,10 @@ export const setupAxiosInterceptors = (store) => {
     (response) => response,
 
     async (error) => {
-      const status = error.response?.status;
+      const status = error?.response?.status ?? error?.status;
       const originalRequest = error.config;
 
-      if (status !== 401) {
+      if (status !== 401 || !originalRequest) {
         return Promise.reject(error);
       }
 
@@ -70,7 +71,14 @@ export const setupAxiosInterceptors = (store) => {
       originalRequest._retry = true;
 
       try {
-        await refreshApi.post(REFRESH_TOKEN_API);
+        if (!refreshInFlight) {
+          refreshInFlight = refreshApi
+            .post(REFRESH_TOKEN_API)
+            .finally(() => {
+              refreshInFlight = null;
+            });
+        }
+        await refreshInFlight;
         return api(originalRequest);
       } catch (refreshError) {
         await performLogout();
