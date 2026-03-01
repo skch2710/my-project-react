@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { profile } from "../store/slices/userSlice";
+import { profile, resetProfileState } from "../store/slices/userSlice";
 import Loader from "../components/loader/Loader";
 
 const AppInitializer = ({ children }) => {
@@ -12,20 +12,14 @@ const AppInitializer = ({ children }) => {
   const loading = useSelector((s) => s.user.profile.loading);
   const error = useSelector((s) => s.user.profile.error);
 
-  // Load profile once
-  // useEffect(() => {
-  //   if (isAuthenticated && !profileLoaded && !loading) {
-  //     dispatch(profile());
-  //   }
-  // }, [isAuthenticated, profileLoaded, loading, dispatch]);
   useEffect(() => {
-    if (isAuthenticated && !profileLoaded && !profileRequested) {
+    if (isAuthenticated && !profileLoaded && !loading && !profileRequested) {
       dispatch(profile());
     }
-  }, [isAuthenticated, profileLoaded, profileRequested]);
+  }, [isAuthenticated, profileLoaded, loading, profileRequested, dispatch]);
 
-  // Block app until profile ready
-  if (isAuthenticated && (!profileLoaded || loading)) {
+  // Block app only while profile is loading.
+  if (isAuthenticated && loading) {
     return <Loader />;
   }
 
@@ -37,7 +31,7 @@ const AppInitializer = ({ children }) => {
         <p>{error}</p>
         <button
           onClick={() => {
-            dispatch({ type: "user/resetProfile" });
+            dispatch(resetProfileState());
             dispatch(profile());
           }}
         >

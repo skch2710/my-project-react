@@ -27,10 +27,8 @@ import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  profile,
   selectNavigations,
   selectUserName,
-  selectProfileLoaded,
 } from "../../store/slices/userSlice";
 import { logoutUser } from "../../store/slices/authSlice";
 import { getNav } from "./helper";
@@ -82,23 +80,11 @@ export default function SideNav() {
 
   const apiNavigations = useSelector(selectNavigations);
   const userName = useSelector(selectUserName);
-  const profileLoaded = useSelector(selectProfileLoaded);
   const loading = useSelector((s) => s.user.profile.loading);
 
   const [open, setOpen] = useState(true);
   const [navigation, setNavigation] = useState([]);
   const [redirected, setRedirected] = useState(false);
-
-  /* ================== LOAD PROFILE ================== */
-  useEffect(() => {
-    if (profileLoaded || loading) return;
-    dispatch(profile())
-      .unwrap()
-      .catch(() => {
-        dispatch(logoutUser());
-        navigate("/login", { replace: true });
-      });
-  }, [dispatch, profileLoaded, loading, navigate]);
 
   /* ================== BUILD NAV ================== */
   useEffect(() => {

@@ -40,7 +40,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
 
-  reducers: {},
+  reducers: {
+    resetProfileState: (state) => {
+      state.profileLoaded = false;
+      state.profileRequested = false;
+      state.profile.loading = false;
+      state.profile.error = null;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -61,7 +68,16 @@ const userSlice = createSlice({
         state.profile.loading = false;
         state.profile.error = null;
       })
-      .addCase(profile.rejected, () => initialState)
+      .addCase(profile.rejected, (state, action) => {
+        state.user = null;
+        state.navigations = [];
+        state.userPrivileges = [];
+        state.profileLoaded = false;
+        state.profileRequested = true;
+        state.profile.loading = false;
+        state.profile.error =
+          action.payload || action.error?.message || "Unable to load profile";
+      })
       .addCase(logoutUser.fulfilled, () => initialState)
       .addCase(logoutUser.rejected, () => initialState);
   },
@@ -78,6 +94,7 @@ export const selectUserName = (state) => {
 export const selectNavigations = (state) => state.user.navigations;
 export const selectUserPrivileges = (state) => state.user.userPrivileges;
 export const selectProfileLoaded = (state) => state.user.profileLoaded;
+export const { resetProfileState } = userSlice.actions;
 
 /* ================== EXPORT ================== */
 export default userSlice.reducer;
