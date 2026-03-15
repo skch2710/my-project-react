@@ -58,6 +58,8 @@ export const setupAxiosInterceptors = (store) => {
       const originalRequest = error?.config;
       const requestUrl = originalRequest?.url || "";
 
+      console.log("Interceptor status:", status);
+
       if (import.meta.env.DEV) {
         console.debug("[AXIOS][ERROR]", {
           rawStatus,

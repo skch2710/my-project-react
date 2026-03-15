@@ -15,7 +15,6 @@ import {
   ListItemText,
   Grid,
   Tooltip,
-  Typography,
   Collapse,
   Skeleton,
 } from "@mui/material";
@@ -33,6 +32,8 @@ import {
 import { logoutUser } from "../../store/slices/authSlice";
 import { getNav } from "./helper";
 import logo from "../../assets/logo.png";
+import ChangePasswordPopup from "./ChangePasswordDialog";
+import UserMenu from "./UserMenu";
 
 const drawerWidth = 220;
 
@@ -86,6 +87,8 @@ export default function SideNav() {
   const [navigation, setNavigation] = useState([]);
   const [redirected, setRedirected] = useState(false);
 
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+
   /* ================== BUILD NAV ================== */
   useEffect(() => {
     if (!apiNavigations?.length) return;
@@ -94,7 +97,7 @@ export default function SideNav() {
       getNav(apiNavigations).map((item) => ({
         ...item,
         collapsed: item.collapsed ?? false,
-      }))
+      })),
     );
   }, [apiNavigations]);
 
@@ -114,8 +117,8 @@ export default function SideNav() {
   const toggleCollapse = useCallback((index) => {
     setNavigation((prev) =>
       prev.map((item, i) =>
-        i === index ? { ...item, collapsed: !item.collapsed } : item
-      )
+        i === index ? { ...item, collapsed: !item.collapsed } : item,
+      ),
     );
   }, []);
 
@@ -162,7 +165,11 @@ export default function SideNav() {
           />
 
           <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-            <Typography sx={{ mr: 2 }}>{userName || "User"}</Typography>
+            <UserMenu
+              userName={userName}
+              onChangePassword={() => setOpenChangePassword(true)}
+            />
+
             <Tooltip title="Logout">
               <IconButton onClick={handleLogout}>
                 <IoMdLogOut />
@@ -179,7 +186,7 @@ export default function SideNav() {
         <List sx={{ mt: 8 }}>
           {navigation.map((item, index) => {
             const parentActive = location.pathname.startsWith(
-              item.resourcePath
+              item.resourcePath,
             );
 
             if (item.subNav?.length) {
@@ -262,6 +269,12 @@ export default function SideNav() {
       <Grid component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
         <Outlet />
       </Grid>
+
+      {/* CHANGE PASSWORD POPUP */}
+      <ChangePasswordPopup
+        open={openChangePassword}
+        handleClose={() => setOpenChangePassword(false)}
+      />
     </Box>
   );
 }
