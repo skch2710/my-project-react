@@ -7,6 +7,7 @@ import Counter from "../counter/Counter";
 import CounterRedux from "../counter/CounterRedux";
 import Home from "../home/Home";
 import Hostel from "../hostel/Hostel";
+import Users from "../users/Users";
 
 // icon mapping
 const iconMap = {
@@ -23,7 +24,7 @@ const iconMap = {
 const componentMap = {
   Home: Home,
   Hostellers: Hostel,
-  User: CounterRedux,
+  User: Users,
   "Full Reports": Counter,
   Monthly: Counter,
   Yearly: Counter,
