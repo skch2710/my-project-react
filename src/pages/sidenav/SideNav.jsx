@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectNavigations,
   selectUserName,
+  resetError,
 } from "../../store/slices/userSlice";
 import { logoutUser } from "../../store/slices/authSlice";
 import { getNav } from "./helper";
@@ -273,7 +274,10 @@ export default function SideNav() {
       {/* CHANGE PASSWORD POPUP */}
       <ChangePasswordPopup
         open={openChangePassword}
-        handleClose={() => setOpenChangePassword(false)}
+        handleClose={() => {
+          setOpenChangePassword(false);
+          dispatch(resetError());
+        }}
       />
     </Box>
   );

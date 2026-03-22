@@ -52,6 +52,8 @@ export const LOGOUT_API = API_SERVICE + "/authenticate/logout";
 
 export const USER_PROFILE_API = API_SERVICE + "/api/v1/user/profile";
 
+export const CHANGE_PASSWORD_API = API_SERVICE + "/api/v1/user/change-password";
+
 export const ADD = "Add";
 export const EDIT = "Edit";
 export const VIEW = "View";

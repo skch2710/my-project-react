@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { GET } from "../../utils/axiosHelper";
-import { USER_PROFILE_API } from "../../utils/constants";
+import { GET, POST } from "../../utils/axiosHelper";
+import { USER_PROFILE_API, CHANGE_PASSWORD_API } from "../../utils/constants";
 import { logoutUser } from "./authSlice";
 
 /* ================== STATE ================== */
@@ -14,6 +14,8 @@ const initialState = {
     loading: false,
     error: null,
   },
+  loading: false,
+  error: "",
 };
 
 /* ================== PROFILE ================== */
@@ -35,6 +37,23 @@ export const profile = createAsyncThunk(
   },
 );
 
+/* Change password API can be added here as another async thunk */
+export const changePassword = createAsyncThunk(
+  "user/changePassword",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await POST(CHANGE_PASSWORD_API, payload);
+      console.log("CHANGE PASSWORD RAW RESPONSE SLICE: ", response);
+      if (response.statusCode === 200) {
+        return response;
+      }
+      return rejectWithValue(response?.errorMessage);
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
 /* ================== SLICE ================== */
 const userSlice = createSlice({
   name: "user",
@@ -46,6 +65,9 @@ const userSlice = createSlice({
       state.profileRequested = false;
       state.profile.loading = false;
       state.profile.error = null;
+    },
+    resetError: (state) => {
+      state.error = "";
     },
   },
 
@@ -79,7 +101,21 @@ const userSlice = createSlice({
           action.payload || action.error?.message || "Unable to load profile";
       })
       .addCase(logoutUser.fulfilled, () => initialState)
-      .addCase(logoutUser.rejected, () => initialState);
+      .addCase(logoutUser.rejected, () => initialState)
+
+      //Change password cases
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error?.message || "Unable to change password";
+      })
   },
 });
 
@@ -94,7 +130,7 @@ export const selectUserName = (state) => {
 export const selectNavigations = (state) => state.user.navigations;
 export const selectUserPrivileges = (state) => state.user.userPrivileges;
 export const selectProfileLoaded = (state) => state.user.profileLoaded;
-export const { resetProfileState } = userSlice.actions;
+export const { resetProfileState, resetError } = userSlice.actions;
 
 /* ================== EXPORT ================== */
 export default userSlice.reducer;

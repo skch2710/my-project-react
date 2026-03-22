@@ -18,11 +18,12 @@ const PopupSmall = (props) => {
     children,
     submitButtonProps = {},
     cancelButtonProps = {},
+    maxWidth = "xs",
   } = props;
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
-      <DialogTitle sx={{ fontSize: "16px" }}>{title}</DialogTitle>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth={maxWidth}>
+      <DialogTitle sx={{ fontSize: "18px" }}>{title}</DialogTitle>
       <IconButton
         onClick={handleClose}
         sx={{ position: "absolute", right: 8, top: 8 }}

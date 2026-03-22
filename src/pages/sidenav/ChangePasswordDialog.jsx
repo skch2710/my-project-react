@@ -1,86 +1,110 @@
-import React, { useState } from "react";
-import { Stack, TextField } from "@mui/material";
+import { Alert } from "@mui/material";
+import { Form, Formik } from "formik";
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import MuiTextFieldPassword from "../../components/fields/MuiTextFieldPassword";
+import Loader from "../../components/loader/Loader";
 import PopupSmall from "../../components/popup/PopupSmall";
+import { changePassword } from "../../store/slices/userSlice";
+import { form, validationSchema } from "./helper";
+import { toast } from "react-toastify";
 
 const ChangePasswordPopup = ({ open, handleClose }) => {
-  const [form, setForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [intialValues, setInitialValues] = useState(form);
+  const formikRef = useRef(null);
 
-  const handleChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    if (form.newPassword !== form.confirmPassword) {
-      alert("Passwords do not match");
-      return;
+  const changePassApiError = useSelector((state) => state.user.error);
+
+  const changePassApiLoading = useSelector((state) => state.user.loading);
+
+  const handleSubmit = async (values) => {
+    console.log("Change Password Form Values: ", values);
+    const response = await dispatch(changePassword(values));
+    console.log("Change Password Response: ", response);
+    if (response.type === "user/changePassword/fulfilled") {
+      toast.success(
+        response.payload.successMessage || "Password changed successfully",
+      );
+      handleClose();
     }
-
-    if (form.newPassword.length < 10) {
-      alert("New password must be at least 10 characters long");
-      return;
-    }
-
-    if(form.newPassword === form.currentPassword) {
-      alert("New password cannot be the same as current password");
-      return;
-    }
-
-    console.log("Call change password API", form);
-
-    handleClose();
   };
 
   return (
-    <PopupSmall
-      open={open}
-      handleClose={handleClose}
-      title="Change Password"
-      submitButtonProps={{
-        label: "Update",
-        variant: "contained",
-        onClick: handleSubmit,
-      }}
-      cancelButtonProps={{
-        label: "Cancel",
-        variant: "outlined",
-      }}
-    >
-      <Stack spacing={2} sx={{ mt: 1 }}>
-        <TextField
-          label="Current Password"
-          type="password"
-          name="currentPassword"
-          fullWidth
-          value={form.currentPassword}
-          onChange={handleChange}
-        />
+    <>
+      <PopupSmall
+        open={open}
+        handleClose={handleClose}
+        title="Change Password"
+        submitButtonProps={{
+          label: "Save",
+          variant: "contained",
+          onClick: () => formikRef.current?.submitForm(),
+        }}
+        cancelButtonProps={{
+          label: "Cancel",
+          variant: "outlined",
+        }}
+        maxWidth="sm"
+      >
+        <Formik
+          innerRef={formikRef}
+          initialValues={intialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {({ values, handleChange, handleBlur, touched, errors }) => (
+            <Form>
+              {/* Errors */}
+              {changePassApiError && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {changePassApiError}
+                </Alert>
+              )}
 
-        <TextField
-          label="New Password"
-          type="password"
-          name="newPassword"
-          fullWidth
-          value={form.newPassword}
-          onChange={handleChange}
-        />
+              {/* Current Password */}
+              <MuiTextFieldPassword
+                label="Current Password"
+                name="currentPassword"
+                placeholder="Enter Current Password"
+                values={values}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                touched={touched}
+                errors={errors}
+              />
 
-        <TextField
-          label="Confirm Password"
-          type="password"
-          name="confirmPassword"
-          fullWidth
-          value={form.confirmPassword}
-          onChange={handleChange}
-        />
-      </Stack>
-    </PopupSmall>
+              {/* New Password */}
+              <MuiTextFieldPassword
+                label="New Password"
+                name="newPassword"
+                placeholder="Enter New Password"
+                values={values}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                touched={touched}
+                errors={errors}
+              />
+
+              {/* Confirm New Password */}
+              <MuiTextFieldPassword
+                label="Confirm New Password"
+                name="confirmNewPassword"
+                placeholder="Confirm New Password"
+                values={values}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                touched={touched}
+                errors={errors}
+              />
+            </Form>
+          )}
+        </Formik>
+      </PopupSmall>
+      {changePassApiLoading && <Loader />}
+    </>
   );
 };
 
