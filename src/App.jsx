@@ -10,6 +10,8 @@ import AppInitializer from "./bootstrap/AppInitializer";
 import { getRoutesFromNavigation } from "./pages/sidenav/helper";
 import SSOPage from "./pages/login/SSOPage";
 import LoginPage from "./pages/login/LoginPage";
+import CredentialSetup from "./pages/credential-setup/CredentialSetup";
+import Test from "./pages/test/Test";
 
 const App = () => {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
@@ -18,7 +20,7 @@ const App = () => {
   // Dynamic routes (paths already normalized)
   const routes = useMemo(
     () => getRoutesFromNavigation(navigations),
-    [navigations]
+    [navigations],
   );
 
   return (
@@ -34,6 +36,10 @@ const App = () => {
           />
 
           <Route path="/sso-page" element={<SSOPage />} />
+
+          <Route path="/credential-setup" element={<CredentialSetup />} />
+
+          <Route path="/test" element={<Test />} />
 
           {/* PROTECTED */}
           <Route element={<PrivateRoute />}>
