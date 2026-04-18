@@ -15,12 +15,12 @@ import { styles } from "./muiTableStyles";
 const MuiTable = ({ title, headers = [], rows = [], onChange }) => {
   return (
     <Box sx={styles.container}>
-      <Typography variant="h6" sx={styles.title}>
+      <Typography variant="subtitle1" sx={styles.title}>
         {title}
       </Typography>
 
       <TableContainer component={Paper} sx={styles.tableContainer}>
-        <Table stickyHeader>
+        <Table stickyHeader size="small">
           <TableHead>
             <TableRow>
               {headers.map((header, index) => (
@@ -48,7 +48,8 @@ const MuiTable = ({ title, headers = [], rows = [], onChange }) => {
                     >
                       {header.type === "checkbox" ? (
                         <Checkbox
-                          disabled
+                          size="small"
+                          disabled={row.disabled}
                           checked={row[field]}
                           onChange={(e) =>
                             onChange?.(rowIndex, field, e.target.checked)

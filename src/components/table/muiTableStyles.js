@@ -1,53 +1,72 @@
 
 export const styles = {
   container: {
-    mt: 2,
+    mt: 1,
     fontSize: "14px",
   },
 
   title: {
     mb: 1,
-    fontWeight: 550,
-    textAlign: "center",
+    fontWeight: 600,
+    textAlign: "left",
+    fontSize: "14px",
   },
 
   tableContainer: {
-    borderRadius: 3,
-    boxShadow: "0 4px 16px rgba(0,0,0,0.05)",
+    borderRadius: 1,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+    border: "1px solid #e8eaed",
+    overflow: "hidden",
   },
 
   headerCell: {
-    fontWeight: 550,
+    fontWeight: 600,
     backgroundColor: "#f5f7fa",
-    fontSize: "16px",
-    height: 40,
-    lineHeight: "40px",
+    fontSize: "14px",
+    height: 34,
+    lineHeight: "34px",
     verticalAlign: "middle",
-    padding: "0 12px 0 12px",
+    padding: "6px 10px",
+    borderBottom: "1px solid #e8eaed",
+    borderRight: "1px solid #e8eaed",
+    "&:last-child": {
+      borderRight: "none",
+    },
   },
 
   row: {
-    transition: "all 0.2s ease",
+    transition: "background-color 0.15s ease",
     "&:hover": {
-      backgroundColor: "#f9fafb",
+      backgroundColor: "#fbfcfd",
     },
   },
 
   leftCell: {
     textAlign: "left",
     fontSize: "14px",
-    height: 40,
-    lineHeight: "40px",
+    height: 34,
+    lineHeight: "34px",
     verticalAlign: "middle",
-    padding: "0 12px 0 12px",
+    padding: "6px 10px",
+    whiteSpace: "nowrap",
+    borderBottom: "1px solid #e8eaed",
+    borderRight: "1px solid #e8eaed",
+    "&:last-child": {
+      borderRight: "none",
+    },
   },
 
   centerCell: {
     textAlign: "center",
     fontSize: "14px",
-    height: 40,
-    lineHeight: "40px",
+    height: 34,
+    lineHeight: "34px",
     verticalAlign: "middle",
-    padding: "0 12px 0 12px",
+    padding: "6px 10px",
+    borderBottom: "1px solid #e8eaed",
+    borderRight: "1px solid #e8eaed",
+    "&:last-child": {
+      borderRight: "none",
+    },
   },
 };
