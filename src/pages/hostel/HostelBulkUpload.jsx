@@ -4,6 +4,7 @@ import { downloadTemplate } from "../../store/slices/hostelSlice";
 import { UPLOAD_FILE } from "../../utils/axiosHelper";
 import { HOSTELLER_BULK_UPLOAD_API } from "../../utils/constants";
 import Button from "../../components/button/Button";
+import { useTheme } from "@mui/material/styles";
 import FileUploadPopup from "../../components/fileUpload/FileUploadPopup";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 
@@ -12,6 +13,8 @@ const HostelBulkUpload = () => {
   const { loading, error } = useSelector((state) => state.hostel);
 
   const dispatch = useDispatch();
+
+  const theme = useTheme();
 
   const handleDownloadTemplate = async () => {
     console.log("Downloading template...");
@@ -30,9 +33,9 @@ const HostelBulkUpload = () => {
   return (
     <>
       <Button
+        variant="darkBlue"
         startIcon={<CloudUploadOutlinedIcon />}
         onClick={() => setOpen(true)}
-        color="secondary"
       >
         Bulk Upload
       </Button>
