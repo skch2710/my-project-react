@@ -35,10 +35,24 @@ const PopupSmall = (props) => {
       <Divider />
       <DialogContent>{children}</DialogContent>
       <DialogActions>
-        <Button {...submitButtonProps} />
-        {cancelButtonProps?.label && (
-          <Button onClick={handleClose} {...cancelButtonProps} />
-        )}
+        {(() => {
+          const { label: submitLabel = "Submit", ...submitRest } = submitButtonProps;
+          return (
+            <Button {...submitRest}>
+              {submitLabel}
+            </Button>
+          );
+        })()}
+
+        {(() => {
+          const { label: cancelLabel = "Close", ...cancelRest } = cancelButtonProps;
+          // If cancel button explicitly disabled/omitted, still render with default label
+          return (
+            <Button onClick={handleClose} {...cancelRest}>
+              {cancelLabel}
+            </Button>
+          );
+        })()}
       </DialogActions>
     </Dialog>
   );

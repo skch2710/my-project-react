@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Button from "../../components/button/Button";
 
 const FormExample = () => {
   const [formData, setFormData] = useState({
@@ -44,10 +45,10 @@ const FormExample = () => {
 
         {/* Form Actions */}
         <div className="form-actions">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={handleReset}>
+          <Button type="submit">Submit</Button>
+          <Button type="button" onClick={handleReset} variant="outlined">
             Reset
-          </button>
+          </Button>
         </div>
       </form>
     </div>

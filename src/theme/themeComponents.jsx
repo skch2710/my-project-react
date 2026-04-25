@@ -1,5 +1,4 @@
 import { red } from '@mui/material/colors';
-import theme from './theme';
 
 const themeComponents = (theme) => ({
   MuiFormLabel: {
@@ -10,7 +9,7 @@ const themeComponents = (theme) => ({
           marginRight: '3px',
         },
       asterisk: {
-        color: theme.colors.red.dark,
+        color: (theme && theme.customColors && theme.customColors.red && theme.customColors.red.dark) || (theme && theme.colors && theme.colors.red && theme.colors.red.dark) || (theme && theme.palette && theme.palette.error && theme.palette.error.main) || '#cf0000',
         marginLeft: '3px',
         fontSize: '12px',
       },

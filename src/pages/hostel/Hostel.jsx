@@ -183,6 +183,18 @@ const Hostel = () => {
         handleClose={handlePopup}
         title={popupTitle}
         onSubmit={() => formikRef.current?.handleSubmit()}
+        submitButtonProps={{
+          variant: "contained",
+          color: "success",
+          disabled: form.loading,
+          onclick: () => formikRef.current?.handleSubmit(),
+        }}
+        cancelButtonProps={{
+          variant: "outlined",
+          disabled: form.loading,
+          isSubmitting: form.loading,
+          onClick: handlePopup,
+        }}
         isSubmitting={form.loading}
         isView={popupTitle === VIEW_POPUP_TITLE}
       >

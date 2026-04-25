@@ -8,6 +8,7 @@ import { REGEX } from "../../../utils/constants";
 import DebField from "../debounced-field/DebField";
 import { FormLabel } from "@mui/material";
 import { useGlobalStyles } from "../../../styles/useGlobalStyles";
+import Button from "../../../components/button/Button";
 
 
 const initialValues = {
@@ -173,9 +174,9 @@ const FormicExample = () => {
               </div>
 
               <div>
-                <button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Submitting..." : "Submit"}
-                </button>
+                </Button>
               </div>
             </Form>
           );

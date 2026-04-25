@@ -3,6 +3,7 @@ import { Grid, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectUserName } from "../../store/slices/userSlice";
 import Timer from "../../components/timer/Timer";
+import Button from "../../components/button/Button";
 import { useState } from "react";
 
 const Home = () => {
@@ -34,14 +35,14 @@ const Home = () => {
         }}
       />
 
-      <button
+      <Button
         onClick={() => {
           setExpired(false);
           setRestartKey((k) => k + 1);
         }}
       >
         Resend OTP
-      </button>
+      </Button>
     </Grid>
   );
 };

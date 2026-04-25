@@ -31,10 +31,11 @@ const HostelBulkUpload = () => {
     <>
       <Button
         startIcon={<CloudUploadOutlinedIcon />}
-        label="Bulk Upload"
         onClick={() => setOpen(true)}
         color="secondary"
-      />
+      >
+        Bulk Upload
+      </Button>
       <FileUploadPopup
         open={open}
         handleClose={() => setOpen(false)}

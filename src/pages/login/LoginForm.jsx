@@ -3,7 +3,6 @@ import { Form, Formik } from "formik";
 import {
   Alert,
   Box,
-  Button,
   Divider,
   FormLabel,
   IconButton,
@@ -12,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Button from "../../components/button/Button";
 
 import MuiCheckbox from "../../components/checkbox/MuiCheckbox";
 
@@ -240,21 +240,7 @@ const LoginForm = () => {
           </Box>
 
           {/* Login Button - BLACK */}
-          <Button
-            type="submit"
-            fullWidth
-            disabled={loginLoading}
-            variant="contained"
-            sx={{
-              py: 1.3,
-              borderRadius: 999,
-              fontWeight: 700,
-              fontSize: 16,
-              bgcolor: "#111",
-              "&:hover": { bgcolor: "#000" },
-              mb: 2,
-            }}
-          >
+          <Button type="submit" fullWidth disabled={loginLoading} variant="blackButton" sx={{ mb: 2 }}>
             {loginLoading ? "Logging in..." : "LOGIN"}
           </Button>
 

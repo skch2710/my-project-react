@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { profile, resetProfileState } from "../store/slices/userSlice";
 import Loader from "../components/loader/Loader";
+import Button from "../components/button/Button";
 
 const AppInitializer = ({ children }) => {
   const dispatch = useDispatch();
@@ -29,14 +30,14 @@ const AppInitializer = ({ children }) => {
       <div style={{ padding: 24, textAlign: "center" }}>
         <h3>Unable to load profile</h3>
         <p>{error}</p>
-        <button
+        <Button
           onClick={() => {
             dispatch(resetProfileState());
             dispatch(profile());
           }}
         >
           Retry
-        </button>
+        </Button>
       </div>
     );
   }

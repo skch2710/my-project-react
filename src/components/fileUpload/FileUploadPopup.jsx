@@ -122,13 +122,13 @@ const FileUploadPopup = (props) => {
           <Typography>Need a template?</Typography>
           <Button
             variant="outlined"
-            startIcon={<RiFileExcel2Fill size={16} />}
+            startIcon={<RiFileExcel2Fill fontSize="small" color="green" />}
             onClick={handleDownloadTemplate}
-            label="Download Template"
-            icon="green"
             loading={loading}
             disabled={loading}
-          />
+          >
+            Download Template
+          </Button>
         </Box>
 
         <Alert severity="info">File size must be 10 MB or less</Alert>
@@ -227,8 +227,9 @@ const FileUploadPopup = (props) => {
           startIcon={<CloudUploadOutlinedIcon />}
           variant="outlined"
           onClick={() => fileInputRef.current.click()}
-          label="Choose File"
-        />
+        >
+          Choose File
+        </Button>
       </Box>
     </PopupSmall>
   );

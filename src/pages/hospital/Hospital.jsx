@@ -64,12 +64,15 @@ const Hospital = () => {
               <Grid container spacing={2} justifyContent="flex-end">
                 <Button
                   startIcon={<AddCircleOutlineRoundedIcon />}
-                  label="Add Hospital"
                   color="success"
                   onClick={handlePopup}
-                />
-                <Button label="Search" color="primary" />
-                <Button label="Clear" color="primary" variant="outlined" />
+                >
+                  Add Hospital
+                </Button>
+                <Button color="primary">Search</Button>
+                <Button color="primary" variant="outlined">
+                  Clear
+                </Button>
               </Grid>
             </Grid>
           </Grid>

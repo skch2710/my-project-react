@@ -10,13 +10,13 @@ import {
 } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import Button from "../button/Button";
+import { Padding } from "@mui/icons-material";
 
 const Popup = (props) => {
   const {
     open,
     handleClose,
     title,
-    onSubmit,
     children,
     submitButtonProps = {},
     cancelButtonProps = {},
@@ -47,25 +47,39 @@ const Popup = (props) => {
         {children}
       </DialogContent>
       <Divider />
-      <DialogActions>
-        {!isView && (
-          <Button
-            type="submit"
-            label="Save"
-            onClick={onSubmit}
-            color="success"
-            loading={isSubmitting}
-            disabled={isSubmitting}
-            {...submitButtonProps}
-          />
-        )}
-        <Button
-          variant="outlined"
-          label={isView ? "Close" : "Cancel"}
-          onClick={handleClose}
-          disabled={isSubmitting}
-          {...cancelButtonProps}
-        />
+      <DialogActions sx={{ pr: 3, pb: 2, pt: 2, pl: 3 }}>
+        {(() => {
+          const { label: submitLabel = "Save", ...submitRest } =
+            submitButtonProps;
+          return (
+            !isView && (
+              <Button
+                disabled={isSubmitting || submitRest.disabled}
+                onClick={submitRest.onClick}
+                {...submitRest}
+              >
+                {isSubmitting ? "Saving..." : submitLabel}
+              </Button>
+            )
+          );
+        })()}
+
+        {(() => {
+          const {
+            label: cancelLabel = isView ? "Close" : "Cancel",
+            ...cancelRest
+          } = cancelButtonProps;
+          return (
+            <Button
+              variant={cancelRest.variant || "outlined"}
+              onClick={handleClose}
+              disabled={isSubmitting || cancelRest.disabled}
+              {...cancelRest}
+            >
+              {cancelLabel}
+            </Button>
+          );
+        })()}
       </DialogActions>
     </Dialog>
   );

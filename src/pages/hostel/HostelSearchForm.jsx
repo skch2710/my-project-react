@@ -51,19 +51,23 @@ const HostelSearchForm = (props) => {
               <Grid container spacing={2} justifyContent="flex-end">
                 <Button
                   startIcon={<AddCircleOutlineRoundedIcon />}
-                  label="Add Hostel"
                   color="success"
                   onClick={() => handlePopup(ADD)}
                   disabled={!isWriteAccessForHostel}
-                />
+                >
+                  Add Hostel
+                </Button>
                 <HostelBulkUpload />
-                <Button label="Search" color="primary" onClick={handleSubmit} />
+                <Button color="primary" onClick={handleSubmit}>
+                  Search
+                </Button>
                 <Button
-                  label="Clear"
                   color="primary"
                   variant="outlined"
                   onClick={() => handleClear()}
-                />
+                >
+                  Clear
+                </Button>
               </Grid>
             </Grid>
           </Grid>

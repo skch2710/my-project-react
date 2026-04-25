@@ -1,9 +1,10 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Paper, Toolbar, Tooltip, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { RiFileExcel2Fill } from "react-icons/ri";
 import { FaRegFilePdf } from "react-icons/fa";
-import FolderZipIcon from '@mui/icons-material/FolderZip';
+import { MdOutlineFolderZip } from "react-icons/md";
 import Button from "../button/Button";
 
 const CommonDataGrid = ({
@@ -34,11 +35,12 @@ const CommonDataGrid = ({
   ...otherProps
 }) => {
   function CustomToolbar() {
+    const theme = useTheme();
     return (
       <Toolbar
         sx={{
-          minHeight: "40px !important",
-          height: "40px !important",
+          minHeight: "60px !important",
+          height: "60px !important",
           px: 1,
           display: "flex",
           alignItems: "center",
@@ -54,13 +56,22 @@ const CommonDataGrid = ({
             <span>
               <Button
                 variant="outlined"
-                startIcon={<RiFileExcel2Fill size={16} />}
+                color="black"
+                startIcon={
+                  <RiFileExcel2Fill
+                    fontSize="small"
+                    color={
+                      exportProp.exportDisabled
+                        ? theme.palette.action.disabled
+                        : theme.palette.success.main
+                    }
+                  />
+                }
                 onClick={exportProp.handleExcelExport}
-                label="Excel"
-                width="60px"
                 disabled={exportProp.exportDisabled}
-                icon="green"
-              />
+              >
+                Excel
+              </Button>
             </span>
           </Tooltip>
           {exportProp?.handlePdfExport && (
@@ -68,13 +79,22 @@ const CommonDataGrid = ({
               <span>
                 <Button
                   variant="outlined"
-                  startIcon={<FaRegFilePdf size={16} />}
+                  color="black"
+                  startIcon={
+                    <FaRegFilePdf
+                      fontSize="small"
+                      color={
+                        exportProp.exportDisabled
+                          ? theme.palette.action.disabled
+                          : theme.palette.error.main
+                      }
+                    />
+                  }
                   onClick={exportProp.handlePdfExport}
-                  label="Pdf"
-                  width="60px"
                   disabled={exportProp.exportDisabled}
-                  icon="red"
-                />
+                >
+                  Pdf
+                </Button>
               </span>
             </Tooltip>
           )}
@@ -83,13 +103,22 @@ const CommonDataGrid = ({
               <span>
                 <Button
                   variant="outlined"
-                  startIcon={<FolderZipIcon size={16} />}
+                  color="black"
+                  startIcon={
+                    <MdOutlineFolderZip
+                      size={20}
+                      color={
+                        exportProp.exportDisabled
+                          ? theme.palette.action.disabled
+                          : theme.palette.yellow.main
+                      }
+                    />
+                  }
                   onClick={exportProp.handleZipExport}
-                  label="Zip"
-                  width="60px"
                   disabled={exportProp.exportDisabled}
-                  icon="#FFD966"
-                />
+                >
+                  Zip
+                </Button>
               </span>
             </Tooltip>
           )}

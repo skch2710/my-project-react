@@ -1,40 +1,63 @@
-import React from "react";
+import React, { memo } from "react";
+import PropTypes from "prop-types";
 import { Button as MuiButton } from "@mui/material";
+import {
+  baseStyles,
+  darkBlueStyles,
+  lightBlueStyles,
+  dangerStyles,
+  blackButtonStyles,
+} from "./button.styles";
 
-const Button = (props) => {
-  const {
-    label,
-    onClick,
+const CUSTOM_VARIANTS = {
+  darkBlue: darkBlueStyles,
+  lightBlue: lightBlueStyles,
+  danger: dangerStyles,
+  blackButton: blackButtonStyles,
+};
+
+const Button = memo(
+  ({
+    children,
     variant = "contained",
-    color,
-    size = "small",
-    disabled,
-    width = "100",
-    icon = "",
-    startIcon,
-  } = props;
-  return (
-    <MuiButton
-      onClick={onClick}
-      variant={variant}
-      color={color}
-      size={size}
-      disabled={disabled}
-      startIcon={startIcon}
-      {...props}
-      sx={{ textTransform: "none", minWidth: width, width: "auto",
-        backgroundColor: disabled ? "#E0E0E0" : variant === "contained" ? "green" : "transparent",
-         "& .MuiButton-startIcon": {
-          color: disabled ? "#9E9E9E" : icon ? icon : "inherit",
-          
-        },
-        fontSize: "14px !important",
-        height: "30px",
-      }}
-    >
-      {label}
-    </MuiButton>
-  );
+    size = "medium",
+    disabled = false,
+    sx,
+    ...rest
+  }) => {
+    const customStyle = CUSTOM_VARIANTS[variant];
+
+    return (
+      <MuiButton
+        variant={customStyle ? "contained" : variant}
+        size={size}
+        disabled={disabled}
+        sx={[baseStyles, customStyle, sx]}
+        {...rest}
+      >
+        {children}
+      </MuiButton>
+    );
+  },
+);
+
+Button.displayName = "Button";
+
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  variant: PropTypes.oneOf([
+    "contained",
+    "outlined",
+    "text",
+    "darkBlue",
+    "lightBlue",
+    "danger",
+    "blackButton",
+  ]),
+  size: PropTypes.oneOf(["small", "medium", "large"]),
+  disabled: PropTypes.bool,
+  sx: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.func]),
+  onClick: PropTypes.func,
 };
 
 export default Button;
