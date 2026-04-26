@@ -1,42 +1,32 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import { useTheme } from "@mui/material/styles";
 
 export const useGlobalStyles = () => {
   const theme = useTheme();
 
   return {
-    formControl: css({
-      width: "100%",
-      color: theme.colors.monochrome.input,
-      padding: "0 7px",
-      border: `1px solid ${theme.colors.secondary.default}`,
-      borderRadius: "4px",
-      boxShadow: "1px 1px 3px rgba(41, 84, 106 / 7%)",
-      height: "30px",
-      fontSize: "12px",
-      backgroundColor: theme.colors.monochrome.white,
-      "&::placeholder": {
-        color: theme.colors.monochrome.input,
-        fontSize: "12px",
+    // Generic reusable styles for pages and sections
+    pageContainer: { p: { xs: 1.5, md: 2 } },
+    pageTitle: { mb: 2 },
+    subtitle: { mb: 2, fontSize: "18px" },
+    sectionPaper: { p: 2, mb: 2, borderRadius: 2 },
+    responsiveGrid: {
+      display: "grid",
+      gridTemplateColumns: {
+        xs: "1fr",
+        sm: "repeat(2, 1fr)",
+        md: "repeat(4, 1fr)",
       },
-      "&[disabled]": {
-        backgroundColor: theme.colors.grey.inputDisableBg,
-        color: theme.colors.grey[300],
-        cursor: "not-allowed",
-        borderColor: theme.colors.grey.inputDisableBorder,
-        textOverflow: "ellipsis",
-      },
-    }),
-    anotherStyle: css({
-      marginTop: "10px",
-      fontWeight: "bold",
-    }),
-    cardStyle: css({
-      padding: "20px",
-      borderRadius: "8px",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    }),
-    // Add more reusable styles here...
+      gap: 2,
+    },
+    actionsBox: {
+      gridColumn: { xs: "1", sm: "1 / -1" },
+      display: "flex",
+      justifyContent: { xs: "flex-start", md: "flex-end" },
+      mt: { xs: 1, md: 0 },
+    },
+    actionsStack: {
+      width: { xs: "100%", md: "auto" },
+      alignItems: { xs: "stretch", md: "center" },
+    },
   };
 };

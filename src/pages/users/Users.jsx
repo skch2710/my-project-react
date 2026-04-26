@@ -1,33 +1,25 @@
 import { Box, Paper, Stack, Typography } from "@mui/material";
 import Button from "../../components/button/Button";
 import MuiTextField from "../../components/fields/MuiTextField";
+import { useGlobalStyles } from "../../styles/useGlobalStyles";
 
 const Users = () => {
+  const styles = useGlobalStyles();
   return (
-    <Box sx={{ p: { xs: 1.5, md: 2 } }}>
+    <Box sx={styles.pageContainer}>
       {/* Page Title */}
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h6" sx={styles.pageTitle}>
         Users
       </Typography>
 
       {/* Filters Section */}
-      <Paper sx={{ p: 2, mb: 2, borderRadius: 2 }}>
-        <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      <Paper sx={styles.sectionPaper}>
+        <Typography variant="subtitle1" sx={styles.subtitle}>
           Filters
         </Typography>
 
         {/* Responsive Grid Layout */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(4, 1fr)",
-            },
-            gap: 2,
-          }}
-        >
+        <Box sx={styles.responsiveGrid}>
           {/* Inputs */}
           <MuiTextField
             fullWidth
@@ -45,27 +37,17 @@ const Users = () => {
           />
 
           {/* Buttons */}
-          <Box
-            sx={{
-              gridColumn: { xs: "1", sm: "1 / -1" },
-              display: "flex",
-              justifyContent: { xs: "flex-start", md: "flex-end" },
-              mt: { xs: 1, md: 0 },
-            }}
-          >
+          <Box sx={styles.actionsBox}>
             <Stack
               direction={{ xs: "column", md: "row" }}
               spacing={2}
-              sx={{
-                width: { xs: "100%", md: "auto" },
-                alignItems: { xs: "stretch", md: "center" },
-              }}
+              sx={styles.actionsStack}
             >
               <Button fullWidth variant="contained" color="success">
                 Add User
               </Button>
 
-              <Button fullWidth variant="contained" color="info">
+              <Button fullWidth variant="darkBlue">
                 Bulk Upload
               </Button>
 

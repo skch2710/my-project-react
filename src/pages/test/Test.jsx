@@ -3,6 +3,7 @@ import MuiTable from "../../components/table/MuiTable";
 import Popup from "../../components/popup/Popup";
 import Button from "../../components/button/Button";
 import { Grid } from "@mui/material";
+import Users from "../users/Users";
 
 const Test = () => {
   const headers = [
@@ -111,7 +112,8 @@ const Test = () => {
   const closePopup = () => setOpen(false);
 
   return (
-    <Grid sx={{ pt: 2, pl: 2 }}>
+    <Users />
+    /*<Grid sx={{ pt: 2, pl: 2 }}>
       <Button variant="contained" color="success" onClick={openPopup}>
         User Privilages Management
       </Button>
@@ -140,7 +142,7 @@ const Test = () => {
           onChange={handleChange}
         />
       </Popup>
-    </Grid>
+    </Grid>*/
   );
 };
 
