@@ -2,6 +2,7 @@ export const baseStyles = {
   textTransform: "none",
   boxShadow: "none",
   minWidth: "120px",
+  width: "auto",
   "&:hover": {
     boxShadow: "none",
   },
@@ -36,7 +37,8 @@ export const blackButtonStyles = (theme) => ({
   borderRadius: 999,
   fontWeight: 700,
   fontSize: 16,
-  bgcolor: "#111",
+  width: "470px",
+  bgcolor: theme.palette.common.black,
   color: theme.palette.common.white,
   "&:hover": {
     bgcolor: "#000",

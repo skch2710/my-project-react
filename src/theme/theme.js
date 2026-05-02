@@ -26,6 +26,14 @@ const theme = createTheme({
     yellow: {
       main: "#ff9800",
     },
+    divider: "#E0E0E0",
+    action: {
+      hover: "#EFF4FA",
+      disabled: "rgba(0,0,0,0.26)",
+    },
+    success: {
+      main: "#2e7d32",
+    },
     common: {
       black: "#1a1a1a", // soft black instead of pure #000000
     },

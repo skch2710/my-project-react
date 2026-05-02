@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { Button as MuiButton } from "@mui/material";
+import MuiButton from "@mui/material/Button";
 import {
   baseStyles,
   darkBlueStyles,
