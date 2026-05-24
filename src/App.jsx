@@ -12,6 +12,7 @@ import SSOPage from "./pages/login/SSOPage";
 import LoginPage from "./pages/login/LoginPage";
 import CredentialSetup from "./pages/credential-setup/CredentialSetup";
 import Test from "./pages/test/Test";
+import EmployeeProfilePage from "./pages/test/EmployeeProfilePage";
 
 const App = () => {
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
@@ -40,6 +41,8 @@ const App = () => {
           <Route path="/credential-setup" element={<CredentialSetup />} />
 
           <Route path="/test" element={<Test />} />
+
+          <Route path="/employee-page" element={<EmployeeProfilePage />} />
 
           {/* PROTECTED */}
           <Route element={<PrivateRoute />}>
