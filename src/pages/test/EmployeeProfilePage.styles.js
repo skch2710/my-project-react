@@ -1,12 +1,6 @@
 export const pageStyles = {
-  root: {
-    p: 2,
-    backgroundColor: "#f5f7fb",
-    minHeight: "100vh",
-  },
-
   container: {
-    borderRadius: 2,
+    // borderRadius: 2,
     overflow: "hidden",
     backgroundColor: "#fff",
   },

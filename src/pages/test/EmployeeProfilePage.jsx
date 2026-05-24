@@ -60,7 +60,7 @@ export default function EmployeeProfilePage() {
   ];
 
   return (
-    <Box sx={pageStyles.root}>
+    <Box>
       <Paper elevation={1} sx={pageStyles.container}>
         <CustomTabs value={value} onChange={handleChange} tabs={tabs} />
 
