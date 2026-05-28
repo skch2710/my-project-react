@@ -1,14 +1,9 @@
 import { useState } from "react";
 
 import {
-  Avatar,
   Box,
-  Chip,
-  Divider,
-  Grid,
   Paper,
-  Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 
 import BadgeIcon from "@mui/icons-material/Badge";
@@ -21,8 +16,9 @@ import SchoolIcon from "@mui/icons-material/School";
 import CustomTabs from "../../components/Tabs/CustomTabs";
 import TabPanel from "../../components/Tabs/TabPanel";
 
-import { employeeDetails, employeeSkills } from "./employeeData";
 
+import EmployeeIdCard from "./EmployeeIdCard";
+import EmployeeMyInfo from "./EmployeeMyInfo";
 import { pageStyles } from "./EmployeeProfilePage.styles";
 
 export default function EmployeeProfilePage() {
@@ -66,121 +62,7 @@ export default function EmployeeProfilePage() {
 
         {/* MY INFO */}
         <TabPanel value={value} index={0}>
-          <Grid container spacing={2}>
-            {/* LEFT PROFILE */}
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Paper variant="outlined" sx={pageStyles.leftCard}>
-                <Avatar
-                  src="https://i.pravatar.cc/300"
-                  sx={pageStyles.avatar}
-                />
-
-                <Typography variant="h5" fontWeight={700}>
-                  John Doe
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ mt: 1 }}
-                >
-                  Software Engineer
-                </Typography>
-
-                <Chip
-                  label="Active"
-                  color="success"
-                  sx={pageStyles.activeChip}
-                />
-
-                {/* QUICK INFO */}
-                <Box sx={pageStyles.quickInfoContainer}>
-                  <Stack>
-                    <Box sx={pageStyles.quickInfoRow}>
-                      <Typography variant="body2" color="text.secondary">
-                        Employee ID
-                      </Typography>
-
-                      <Typography fontWeight={600}>EMP001</Typography>
-                    </Box>
-
-                    <Box sx={pageStyles.quickInfoRow}>
-                      <Typography variant="body2" color="text.secondary">
-                        Official Email
-                      </Typography>
-
-                      <Typography fontWeight={600}>
-                        john.doe@example.com
-                      </Typography>
-                    </Box>
-
-                    <Box sx={pageStyles.quickInfoRow}>
-                      <Typography variant="body2" color="text.secondary">
-                        Reporting Manager
-                      </Typography>
-
-                      <Typography fontWeight={600}>Jane Smith</Typography>
-                    </Box>
-                  </Stack>
-                </Box>
-              </Paper>
-            </Grid>
-
-            {/* RIGHT SECTION */}
-            <Grid size={{ xs: 12, md: 9 }}>
-              <Paper variant="outlined" sx={pageStyles.rightCard}>
-                <Typography variant="h6" sx={pageStyles.sectionTitle}>
-                  Employee Information
-                </Typography>
-
-                {/* DETAILS GRID */}
-                <Grid container spacing={2}>
-                  {employeeDetails.map((item) => (
-                    <Grid
-                      key={item.label}
-                      size={{
-                        xs: 12,
-                        sm: 6,
-                        md: 3,
-                      }}
-                    >
-                      <Typography sx={pageStyles.infoLabel}>
-                        {item.label}
-                      </Typography>
-
-                      <Typography sx={pageStyles.infoValue}>
-                        {item.value}
-                      </Typography>
-                    </Grid>
-                  ))}
-                </Grid>
-
-                {/* SKILLS */}
-                <Box sx={pageStyles.skillsContainer}>
-                  <Typography variant="h6" sx={pageStyles.sectionTitle}>
-                    Skills / Technologies
-                  </Typography>
-
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    useFlexGap
-                    flexWrap="wrap"
-                  >
-                    {employeeSkills.map((skill) => (
-                      <Chip
-                        key={skill}
-                        label={skill}
-                        variant="outlined"
-                        color="primary"
-                        sx={pageStyles.skillChip}
-                      />
-                    ))}
-                  </Stack>
-                </Box>
-              </Paper>
-            </Grid>
-          </Grid>
+          <EmployeeMyInfo />
         </TabPanel>
 
         {/* ADDRESS */}
@@ -205,7 +87,7 @@ export default function EmployeeProfilePage() {
 
         {/* ID CARD */}
         <TabPanel value={value} index={5}>
-          <Typography variant="h6">Employee ID Card</Typography>
+          <EmployeeIdCard />
         </TabPanel>
       </Paper>
     </Box>

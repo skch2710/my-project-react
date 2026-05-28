@@ -1,3 +1,19 @@
+export const employeeLeftDetails = {
+  companyName: "OneTech Solutions Inc.",
+  employeeName: "Chittipothula Sathish Kumar",
+  employeeId: "EMP123456",
+  officialEmail: "sathish.ch@onetech.com",
+  reportingManager: "Jane Smith",
+  designation: "Senior Engineer",
+  status: "Active",
+};
+
+export const employeequickInfo = [
+  { label: "Employee ID", value: "EMP12345678" },
+  { label: "Official Email", value: "sathish.ch@onetech.com" },
+  { label: "Reporting Manager", value: "Jane Smith" },
+];
+
 export const employeeDetails = [
   {
     label: "Full Name",
@@ -5,7 +21,7 @@ export const employeeDetails = [
   },
   {
     label: "Date of Birth",
-    value: "12 Feb 1995",
+    value: "27 Oct 1995",
   },
   {
     label: "Gender",
@@ -21,7 +37,7 @@ export const employeeDetails = [
   },
   {
     label: "Personal Email",
-    value: "john.personal@gmail.com",
+    value: "sathish.ch@gmail.com",
   },
   {
     label: "Blood Group",
@@ -33,11 +49,11 @@ export const employeeDetails = [
   },
   {
     label: "Role Band",
-    value: "Band 2",
+    value: "Band 3",
   },
   {
     label: "Designation",
-    value: "Software Engineer",
+    value: "Senior Engineer",
   },
   {
     label: "Employment Type",
@@ -45,15 +61,15 @@ export const employeeDetails = [
   },
   {
     label: "Work Location",
-    value: "New York, USA",
+    value: "Hyderabad, India",
   },
   {
     label: "Date of Joining",
-    value: "15 Jan 2023",
+    value: "15 June 2022",
   },
   {
     label: "Probation End Date",
-    value: "15 Jul 2023",
+    value: "15 Sep 2022",
   },
   {
     label: "Employee Status",
@@ -61,7 +77,7 @@ export const employeeDetails = [
   },
   {
     label: "Company Name",
-    value: "Tech Solutions Inc.",
+    value: "OneTech Solutions Inc.",
   },
   {
     label: "Department",
@@ -73,7 +89,7 @@ export const employeeDetails = [
   },
   {
     label: "Last Working Day",
-    value: "-",
+    value: "--",
   },
 ];
 
@@ -87,4 +103,23 @@ export const employeeSkills = [
   "Docker",
   "AWS",
   "Python",
+];
+
+export const cardDetails = [
+  {
+    label: "Employee ID",
+    value: "EMP12345678",
+  },
+  {
+    label: "Official Email",
+    value: "sathish.ch@onetech.com",
+  },
+  {
+    label: "Blood Group",
+    value: "B +ve",
+  },
+  {
+    label: "Personal & Emergency Contact",
+    value: "+91 5559876543, +91 5551234567",
+  },
 ];
