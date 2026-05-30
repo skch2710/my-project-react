@@ -44,7 +44,7 @@ const EmployeeIdCard = () => {
                 <Box sx={styles.profileSection}>
                   <Avatar
                     src="https://i.pravatar.cc/300"
-                    sx={pageStyles.avatar}
+                    sx={styles.avatar}
                   />
                 </Box>
                 {/* BODY */}
@@ -71,7 +71,6 @@ const EmployeeIdCard = () => {
                     ))}
                   </Box>
                 </Box>
-                {/* FOOTER - placed outside body so it spans full card width */}
                 <Box sx={styles.footer}>www.onetechsolutions.com</Box>
               </Paper>
 
@@ -102,7 +101,7 @@ const EmployeeIdCard = () => {
         <Grid size={{ xs: 12, md: 5 }}>
           <Paper variant="outlined" sx={pageStyles.rightCard}>
             <Typography variant="h6" sx={pageStyles.sectionTitle}>
-              Employee Details Card - Coming Soon!
+              Upload Your ID Photo
             </Typography>
           </Paper>
         </Grid>

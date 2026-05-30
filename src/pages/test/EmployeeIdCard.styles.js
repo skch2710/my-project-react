@@ -16,9 +16,10 @@ export const styles = {
   },
 
   card: {
-    width: { xs: "100%", sm: 300 },
-    maxWidth: 300,
-    height: 500,
+    width: { xs: "100%", sm: 220 },
+    maxWidth: 220,
+    height: { xs: "auto", sm: 348 },
+    aspectRatio: "0.631 / 1",
     borderRadius: "12px",
     overflow: "hidden",
     position: "relative",
@@ -27,11 +28,12 @@ export const styles = {
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
+    borderTop: "1px solid #e5e7eb",
   },
 
   topSection: {
     position: "relative",
-    height: 120,
+    height: 80,
     overflow: "hidden",
     background: "linear-gradient(180deg,#0b5ed7 0%,#2f80ff 55%)",
   },
@@ -72,22 +74,20 @@ export const styles = {
     zIndex: 2,
     display: "flex",
     alignItems: "center",
-    gap: 1.5,
-    pt: 2,
-    pb: 3,
-    pl: 2,
+    gap: 1,
+    p: 1.4,
     color: "#fff",
   },
 
   logo: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: "#0b5ed7",
     fontWeight: 800,
-    fontSize: 26,
+    fontSize: 18,
     background: "#fff",
     boxShadow: "0 8px 18px rgba(11,94,215,0.12)",
     borderRadius: "50%",
@@ -95,35 +95,37 @@ export const styles = {
 
   companyName: {
     fontWeight: 800,
-    fontSize: 18,
+    fontSize: 14,
     lineHeight: 1,
-  },
-
-  companyTag: {
-    mt: 0.3,
-    opacity: 0.95,
-    fontSize: 11,
-    color: "rgba(255,255,255,0.9)",
   },
 
   profileSection: {
     position: "relative",
-    mt: -6,
+    mt: -4,
     zIndex: 10,
     textAlign: "center",
+  },
+  
+  avatar: {
+    width: 80,
+    height: 80,
+    margin: "0 auto",
+    border: "2px solid #fff",
+    mb: 1,
   },
 
   employeeName: {
     textAlign: "center",
     fontWeight: 700,
-    fontSize: 18,
+    fontSize: 14,
+    lineHeight: 1,
   },
 
   designation: {
     textAlign: "center",
     color: "#1565c0",
     fontWeight: 600,
-    fontSize: 16,
+    fontSize: 12,
   },
 
   detailCard: {
@@ -131,14 +133,14 @@ export const styles = {
     width: "100%",
     backgroundColor: "transparent",
     borderRadius: "6px",
-    py: 0.5,
+    py: 0.2,
     px: 0,
     textAlign: "center",
   },
 
   detailLabel: {
     display: "block",
-    fontSize: 12,
+    fontSize: 10,
     color: "#6b7280",
     textAlign: "center",
     mb: 0,
@@ -147,7 +149,7 @@ export const styles = {
   detailValue: {
     display: "block",
     fontWeight: 700,
-    fontSize: 14,
+    fontSize: 12,
     mt: 0,
     lineHeight: 1.2,
     textAlign: "center",
@@ -160,16 +162,15 @@ export const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontWeight: 500,
-    fontSize: 12,
+    fontSize: 10,
     py: 1,
-    px: 2,
+    px: 1,
     mt: "auto",
     width: "100%",
     borderBottomLeftRadius: "12px",
     borderBottomRightRadius: "12px",
   },
   backFooter: {
-    // borderTop: "1px solid #e5e7eb",
     p: 2,
     mt: "auto",
     width: "100%",
@@ -181,7 +182,7 @@ export const styles = {
   },
 
   backNote: {
-    fontSize: 14,
+    fontSize: 10,
     color: "#29323e",
     fontWeight: 550,
     mb: 1.5,
