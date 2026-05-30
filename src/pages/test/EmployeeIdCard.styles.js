@@ -33,8 +33,7 @@ export const styles = {
     position: "relative",
     height: 120,
     overflow: "hidden",
-    background:
-      "linear-gradient(180deg,#0b5ed7 0%,#2f80ff 55%)",
+    background: "linear-gradient(180deg,#0b5ed7 0%,#2f80ff 55%)",
   },
 
   circleOne: {
@@ -155,8 +154,7 @@ export const styles = {
   },
 
   footer: {
-    background:
-      "linear-gradient(135deg,#0057ff,#2f80ff)",
+    background: "linear-gradient(135deg,#0057ff,#2f80ff)",
     color: "#fff",
     display: "flex",
     alignItems: "center",
@@ -170,6 +168,26 @@ export const styles = {
     borderBottomLeftRadius: "12px",
     borderBottomRightRadius: "12px",
   },
+  backFooter: {
+    // borderTop: "1px solid #e5e7eb",
+    p: 2,
+    mt: "auto",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    boxSizing: "border-box",
+    height: "100%",
+  },
 
-
+  backNote: {
+    fontSize: 14,
+    color: "#29323e",
+    fontWeight: 550,
+    mb: 1.5,
+    textAlign: "left",
+    overflowWrap: "break-word",
+    wordBreak: "break-word",
+    whiteSpace: "normal",
+  },
 };

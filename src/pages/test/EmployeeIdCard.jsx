@@ -16,14 +16,14 @@ const EmployeeIdCard = () => {
       </Box>
       <Grid container spacing={2}>
         {/* LEFT SECTION */}
-          <Grid size={{ xs: 12, md: 7 }}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <Paper variant="outlined" sx={pageStyles.leftCard}>
             <Box
               sx={{
                 display: "flex",
                 gap: 2,
                 flexWrap: "wrap",
-                 justifyContent: "flex-start",
+                justifyContent: "flex-start",
                 alignItems: "flex-start",
               }}
             >
@@ -77,16 +77,29 @@ const EmployeeIdCard = () => {
 
               <Paper elevation={0} sx={styles.card}>
                 {/* BACK CARD */}
-                <Typography sx={styles.detailValue}>
-                  {"Card Back - Coming Soon!"}
-                </Typography>
+                <Box sx={styles.backFooter}>
+                  <Typography sx={styles.backNote}>
+                    Loss of this ID card should be reported immediately to the
+                    OneTech Solutions Security Office.
+                  </Typography>
+
+                  <Typography sx={styles.backNote}>
+                    If this ID card is found unclaimed, please return it to the
+                    Security Office at OneTech Solutions.
+                  </Typography>
+
+                  <Typography sx={styles.backNote}>
+                    The holder must display this ID card whenever entering the
+                    office premises.
+                  </Typography>
+                </Box>
               </Paper>
             </Box>
           </Paper>
         </Grid>
 
         {/* RIGHT SECTION */}
-          <Grid size={{ xs: 12, md: 5 }}>
+        <Grid size={{ xs: 12, md: 5 }}>
           <Paper variant="outlined" sx={pageStyles.rightCard}>
             <Typography variant="h6" sx={pageStyles.sectionTitle}>
               Employee Details Card - Coming Soon!
