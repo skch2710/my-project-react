@@ -1,9 +1,19 @@
-import { Avatar, Box, Grid, Paper, Typography } from "@mui/material";
+import { Avatar, Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { pageStyles } from "./EmployeeMyInfo.styles";
 import { styles } from "./EmployeeIdCard.styles";
 import { cardDetails, employeeLeftDetails } from "./employeeData";
+import { useState } from "react";
+import PassphotoWithPhoto from "../../assets/PassphotoWithPhoto.jpeg";
 
 const EmployeeIdCard = () => {
+  const [photoUrl, setPhotoUrl] = useState("");
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setPhotoUrl(URL.createObjectURL(file));
+    }
+  };
   return (
     <>
       <Box>
@@ -42,8 +52,10 @@ const EmployeeIdCard = () => {
                 </Box>
                 {/* PROFILE */}
                 <Box sx={styles.profileSection}>
-                  <Avatar
-                    src="https://i.pravatar.cc/300"
+                  <Box
+                    component="img"
+                    src={photoUrl || PassphotoWithPhoto}
+                    alt="Employee"
                     sx={styles.avatar}
                   />
                 </Box>
@@ -71,7 +83,7 @@ const EmployeeIdCard = () => {
                     ))}
                   </Box>
                 </Box>
-                <Box sx={styles.footer}>www.onetechsolutions.com</Box>
+                <Box sx={styles.footer}>{employeeLeftDetails.companyWebsite}</Box>
               </Paper>
 
               <Paper elevation={0} sx={styles.card}>
@@ -79,12 +91,12 @@ const EmployeeIdCard = () => {
                 <Box sx={styles.backFooter}>
                   <Typography sx={styles.backNote}>
                     Loss of this ID card should be reported immediately to the
-                    OneTech Solutions Security Office.
+                    Example Solutions Security Office.
                   </Typography>
 
                   <Typography sx={styles.backNote}>
                     If this ID card is found unclaimed, please return it to the
-                    Security Office at OneTech Solutions.
+                    Security Office at Example Solutions.
                   </Typography>
 
                   <Typography sx={styles.backNote}>
@@ -103,6 +115,15 @@ const EmployeeIdCard = () => {
             <Typography variant="h6" sx={pageStyles.sectionTitle}>
               Upload Your ID Photo
             </Typography>
+            <Button component="label" variant="contained">
+              Upload Photo
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleFileChange}
+              />
+            </Button>
           </Paper>
         </Grid>
       </Grid>

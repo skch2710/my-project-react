@@ -12,7 +12,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
-
+import WorkIcon from '@mui/icons-material/Work';
 import CustomTabs from "../../components/Tabs/CustomTabs";
 import TabPanel from "../../components/Tabs/TabPanel";
 
@@ -32,6 +32,10 @@ export default function EmployeeProfilePage() {
     {
       label: "My Info",
       icon: <PersonIcon />,
+    },
+    {
+      label: "Project Details",
+      icon: <WorkIcon />,
     },
     {
       label: "Address",
@@ -65,28 +69,33 @@ export default function EmployeeProfilePage() {
           <EmployeeMyInfo />
         </TabPanel>
 
-        {/* ADDRESS */}
+        {/* PROJECT DETAILS */}
         <TabPanel value={value} index={1}>
+          <Typography variant="h6">Project Details</Typography>
+        </TabPanel>
+
+        {/* ADDRESS */}
+        <TabPanel value={value} index={2}>
           <Typography variant="h6">Address Details</Typography>
         </TabPanel>
 
         {/* FAMILY */}
-        <TabPanel value={value} index={2}>
+        <TabPanel value={value} index={3}>
           <Typography variant="h6">Family Details</Typography>
         </TabPanel>
 
         {/* IDENTITY */}
-        <TabPanel value={value} index={3}>
+        <TabPanel value={value} index={4}>
           <Typography variant="h6">Identity Details</Typography>
         </TabPanel>
 
         {/* EDUCATION */}
-        <TabPanel value={value} index={4}>
+        <TabPanel value={value} index={5}>
           <Typography variant="h6">Education Details</Typography>
         </TabPanel>
 
         {/* ID CARD */}
-        <TabPanel value={value} index={5}>
+        <TabPanel value={value} index={6}>
           <EmployeeIdCard />
         </TabPanel>
       </Paper>

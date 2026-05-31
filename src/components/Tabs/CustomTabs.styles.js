@@ -2,7 +2,7 @@ export const tabsStyles = {
   borderBottom: "1px solid #e5e7eb",
 
   "& .MuiTabs-flexContainer": {
-    gap: 8,
+    gap: 4,
     // paddingX: 2,
   },
 };

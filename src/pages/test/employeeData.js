@@ -1,16 +1,17 @@
 export const employeeLeftDetails = {
-  companyName: "OneTech Solutions Inc.",
+  companyName: "Example Solutions Inc.",
   employeeName: "Chittipothula Sathish Kumar",
   employeeId: "EMP123456",
-  officialEmail: "sathish.ch@onetech.com",
+  officialEmail: "sathish.ch@example.com",
   reportingManager: "Jane Smith",
   designation: "Senior Engineer",
   status: "Active",
+  companyWebsite: "www.examplesolutions.com",
 };
 
 export const employeequickInfo = [
   { label: "Employee ID", value: "EMP12345678" },
-  { label: "Official Email", value: "sathish.ch@onetech.com" },
+  { label: "Official Email", value: "sathish.ch@example.com" },
   { label: "Reporting Manager", value: "Jane Smith" },
 ];
 
@@ -109,10 +110,6 @@ export const cardDetails = [
   {
     label: "Employee ID",
     value: "EMP12345678",
-  },
-  {
-    label: "Official Email",
-    value: "sathish.ch@onetech.com",
   },
   {
     label: "Blood Group",

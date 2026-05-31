@@ -105,12 +105,15 @@ export const styles = {
     zIndex: 10,
     textAlign: "center",
   },
-  
+
   avatar: {
     width: 80,
-    height: 80,
-    margin: "0 auto",
-    border: "2px solid #fff",
+    height: 100,
+    objectFit: "cover",
+    mx: "auto",
+    display: "block",
+    borderRadius: 0.5,
+    border: "0.1px solid #6d6d6d",
     mb: 1,
   },
 
@@ -118,7 +121,7 @@ export const styles = {
     textAlign: "center",
     fontWeight: 700,
     fontSize: 14,
-    lineHeight: 1,
+    lineHeight: 1.2,
   },
 
   designation: {

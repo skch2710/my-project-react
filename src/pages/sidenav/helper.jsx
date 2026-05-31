@@ -26,9 +26,9 @@ const componentMap = {
   Home: Home,
   Hostellers: Hostel,
   User: Users,
-  "Full Reports": EmployeeProfilePage,
-  Monthly: Counter,
-  Yearly: Counter,
+  "My Data": EmployeeProfilePage,
+  Payroll: Counter,
+  "Admin Portal": Counter,
 };
 
 // Convert API navigation to app navigation
