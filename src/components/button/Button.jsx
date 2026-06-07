@@ -7,6 +7,7 @@ import {
   lightBlueStyles,
   dangerStyles,
   blackButtonStyles,
+  dottedStyles,
 } from "./button.styles";
 
 const CUSTOM_VARIANTS = {
@@ -14,6 +15,7 @@ const CUSTOM_VARIANTS = {
   lightBlue: lightBlueStyles,
   danger: dangerStyles,
   blackButton: blackButtonStyles,
+  dotted: dottedStyles,
 };
 
 const Button = memo(
@@ -53,6 +55,7 @@ Button.propTypes = {
     "lightBlue",
     "danger",
     "blackButton",
+    "dotted",
   ]),
   size: PropTypes.oneOf(["small", "medium", "large"]),
   disabled: PropTypes.bool,

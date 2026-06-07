@@ -44,3 +44,17 @@ export const blackButtonStyles = (theme) => ({
     bgcolor: "#000",
   },
 });
+
+export const dottedStyles = (theme) => ({
+  backgroundColor: "transparent",
+  color: theme.colors?.brand?.[600] || theme.palette.primary.main,
+  borderStyle: "dashed",
+  borderWidth: "2px",
+  borderColor: theme.colors?.brand?.[300] || theme.palette.primary.main,
+  border: `2px dashed ${theme.colors?.brand?.[300] || theme.palette.primary.main}`,
+  borderRadius: 2,
+  textTransform: "none",
+  "&:hover": {
+    backgroundColor: "rgba(0,0,0,0.03)",
+  },
+});

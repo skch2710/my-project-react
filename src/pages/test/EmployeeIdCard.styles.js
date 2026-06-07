@@ -25,10 +25,10 @@ export const styles = {
     position: "relative",
     backgroundColor: "#fff",
     boxShadow: "0 10px 30px rgba(0,0,0,0.10)",
+    border: "1px solid #e5e7eb",
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
-    borderTop: "1px solid #e5e7eb",
   },
 
   topSection: {
