@@ -58,7 +58,7 @@ const UserSearchForm = ({ onSearch, onClear }) => {
                     variant="contained"
                     color="success"
                     type="button"
-                    startIcon={<AddCircleOutlineRoundedIcon />}e
+                    startIcon={<AddCircleOutlineRoundedIcon />}
                   >
                     Add User
                   </Button>

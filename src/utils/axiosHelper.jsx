@@ -2,17 +2,16 @@ import FileSaver from "file-saver";
 import { toast } from "react-toastify";
 import { api } from "./axiosClient";
 
-export const GET = async (url, params = {}) =>{
-  try{
+export const GET = async (url, params = {}) => {
+  try {
     const response = await api.get(url, { params });
     return response.data;
   } catch (error) {
     throw error;
   }
-}
-  
+};
 
-export const POST = async (url, payload) =>{
+export const POST = async (url, payload) => {
   try {
     const response = await api.post(url, payload);
     return response.data;
@@ -66,14 +65,18 @@ export const DOWNLOAD_FILE_GET = async (url, params = {}) => {
 export const UPLOAD_FILE = async (
   url,
   file,
-  { dto, onProgress, headers = {}, fileKey = "file", dtoKey = "dto" } = {}
+  { dto, onProgress, headers = {}, fileKey = "file", dtoKey = "dto" } = {},
 ) => {
   const formData = new FormData();
 
   formData.append(fileKey, file);
 
   if (dto !== undefined && dto !== null) {
-    formData.append(dtoKey, JSON.stringify(dto));
+    const dtoBlob = new Blob([JSON.stringify(dto)], {
+      type: "application/json",
+    });
+
+    formData.append(dtoKey, dtoBlob);
   }
   try {
     return await api.post(url, formData, {
